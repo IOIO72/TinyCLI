@@ -2,23 +2,27 @@
 
 // required modules
 var gulp = require('gulp'),
+    postcss = require('gulp-postcss'),
+    autoprefixer = require('autoprefixer'),
+    sourcemaps = require('gulp-sourcemaps'),
+    nested = require('postcss-nested'),
+    scss = require('postcss-scss'),
+    variables = require('postcss-simple-vars'),
+    ext_replace = require('gulp-ext-replace'),
     jade = require('gulp-jade'),
     html5lint = require('gulp-html5-lint'),
-    sass = require('gulp-sass'),
-    autoprefixer = require('gulp-autoprefixer'),
-    sourcemaps = require('gulp-sourcemaps'),
-    csslint = require('gulp-csslint'),
     gulpCopy = require('gulp-copy'),
     jshint = require('gulp-jshint'),
     cleanDest = require('gulp-clean-dest'),
     browserSync = require('browser-sync'),
     reload = browserSync.reload;
 
+
 // copy the jQuery bower package to the source directory.
 gulp.task('copy:bower', function () {
     gulp.src([
-        './bower_components/jquery/dist/jquery.min.js'
-    ])
+            './bower_components/jquery/dist/jquery.min.js'
+        ])
         .pipe(gulpCopy('./source/js/vendor', {prefix: 3}))
     ;
 });
@@ -26,8 +30,8 @@ gulp.task('copy:bower', function () {
 // copy all javascripts from source to destination.
 gulp.task('copy:js', function () {
     gulp.src([
-        './source/js/**/*.js'
-    ])
+            './source/js/**/*.js'
+        ])
         .pipe(cleanDest('./build/js'))
         .pipe(gulpCopy('./build/js', {prefix: 2}))
     ;
@@ -52,21 +56,18 @@ gulp.task('templates', function () {
 });
 
 // build and check CSS files and add source maps to them.
-gulp.task('sass', function () {
-    gulp.src('./source/sass/**/*.scss')
-        .pipe(cleanDest('./build/css'))
+gulp.task('css', function () {
+    var processors = [
+        variables,
+        autoprefixer({browsers: ['last 2 versions']}),
+        nested
+    ];
+    return gulp.src('./source/css/**/*.scss')
         .pipe(sourcemaps.init())
-        .pipe(sass().on('error', sass.logError))
-        .pipe(autoprefixer({
-            browsers: ['Chrome > 45', 'Firefox > 37', 'Safari > 8', 'Opera > 31'], // browser versions to support
-            cascade: false,
-            add: true
-        }))
-        .pipe(csslint())
-        .pipe(csslint.reporter('text'))
+        .pipe(postcss(processors, {syntax: scss}))
+        .pipe(ext_replace('.css'))
         .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('./build/css'))
-    ;
+        .pipe(gulp.dest('./build/css'));
 });
 
 // do these tasks to build the destination files.
@@ -74,7 +75,7 @@ gulp.task('build', [
         'copy:bower',
         'copy:js',
         'templates',
-        'sass'
+        'css'
     ]
 );
 
@@ -90,8 +91,8 @@ var _watcher = function (blnReload) {
             tasks: ['copy:js', 'lint']
         },
         {
-            src: 'source/sass/**/*.{scss,sass}',
-            tasks: ['sass']
+            src: 'source/css/**/*.scss',
+            tasks: ['css']
         }
     ];
     var _arrTasks = null;
