@@ -1,4 +1,4 @@
-# ioioPen - A lightweight starter for Gulp, Bower, Jade, Sass, jQuery and BrowerSync
+# ioioPen - A lightweight starter for Gulp, Bower, Jade, PostCSS with SCSS, jQuery and BrowerSync
 
 I love to use [CodePen](http://codepen.io/) to start experimenting seamlessly from a first inspiration to soon visible
 results.
