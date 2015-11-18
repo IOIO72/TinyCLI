@@ -21,6 +21,7 @@ It is based on the JavaScript runtime [Node.js](https://nodejs.org/), the task a
 
 # Setup
 
+1. Check build status: [![Build Status](https://travis-ci.org/IOIO72/ioioPen.svg)](https://travis-ci.org/IOIO72/ioioPen)
 1. If you didn't before, install [Node.js](https://nodejs.org/)
 1. If you didn't before, install [Gulp.js](http://gulpjs.com/) `npm install --global gulp`
 1. If you didn't before, install [Bower](http://bower.io/) `npm install -g bower`
