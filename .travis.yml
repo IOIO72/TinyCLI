@@ -9,3 +9,5 @@ before_script:
   - npm install -g gulp
   - npm install -g bower
 script: gulp test
+notifications:
+  slack: ioio-software:lGCpgLn4b1ZfunSHOW3UJ2gb
