@@ -123,3 +123,6 @@ gulp.task('serve', ['build'], function () {
 
 // definied default task. (You could change 'watch' to the task 'serve').
 gulp.task('default', ['watch']);
+
+// definied test task.
+gulp.task('test', ['build']);
