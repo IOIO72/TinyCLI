@@ -1,21 +1,19 @@
 'use strict';
 
 // required modules
-var gulp = require('gulp'),
-    postcss = require('gulp-postcss'),
-    autoprefixer = require('autoprefixer'),
-    sourcemaps = require('gulp-sourcemaps'),
-    nested = require('postcss-nested'),
-    scss = require('postcss-scss'),
-    variables = require('postcss-simple-vars'),
-    ext_replace = require('gulp-ext-replace'),
-    jade = require('gulp-jade'),
-    html5lint = require('gulp-html5-lint'),
-    gulpCopy = require('gulp-copy'),
-    jshint = require('gulp-jshint'),
-    cleanDest = require('gulp-clean-dest'),
-    browserSync = require('browser-sync'),
-    reload = browserSync.reload;
+var gulp            = require('gulp'),
+    autoprefixer    = require('autoprefixer'),
+    sourcemaps      = require('gulp-sourcemaps'),
+    postcss         = require('gulp-postcss'),
+    precss          = require('precss'),
+    ext_replace     = require('gulp-ext-replace'),
+    jade            = require('gulp-jade'),
+    html5lint       = require('gulp-html5-lint'),
+    gulpCopy        = require('gulp-copy'),
+    jshint          = require('gulp-jshint'),
+    cleanDest       = require('gulp-clean-dest'),
+    browserSync     = require('browser-sync'),
+    reload          = browserSync.reload;
 
 
 // copy the jQuery bower package to the source directory.
@@ -58,13 +56,12 @@ gulp.task('templates', function () {
 // build and check CSS files and add source maps to them.
 gulp.task('css', function () {
     var processors = [
-        variables,
-        autoprefixer({browsers: ['last 2 versions']}),
-        nested
+        precss,
+        autoprefixer({browsers: ['last 2 versions']})
     ];
     return gulp.src('./source/css/**/*.scss')
         .pipe(sourcemaps.init())
-        .pipe(postcss(processors, {syntax: scss}))
+        .pipe(postcss(processors))
         .pipe(ext_replace('.css'))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('./build/css'));
