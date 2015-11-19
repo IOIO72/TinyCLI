@@ -1,6 +1,6 @@
 {
   "name": "ioioPen",
-  "description": "Kickstart for projects based on Gulp, Bower, Jade, Sass and jQuery",
+  "description": "Kickstart for projects based on Gulp, Bower, Jade, PostCSS and jQuery",
   "main": "source/js/app/ioio.app.js",
   "authors": [
     "Tamio Patrick Honma"

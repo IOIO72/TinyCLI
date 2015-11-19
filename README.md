@@ -1,4 +1,4 @@
-# ioioPen - A lightweight starter for Gulp, Bower, Jade, Sass, jQuery and BrowerSync
+# ioioPen - A lightweight starter for Gulp, Bower, Jade, SCSS via PostCSS, jQuery and BrowerSync
 
 I love to use [CodePen](http://codepen.io/) to start experimenting seamlessly from a first inspiration to soon visible
 results.
@@ -9,11 +9,11 @@ which CodePen doesn't provide.
 That's the reason why I set up this boilerplate code, which I call **ioioPen** in derivation of the name _CodePen_ and
 my alias name _IOIO_.
 
-My default setup on CodePen is [Jade](http://jade-lang.com/), [SASS](http://sass-lang.com/) and
+My default setup on CodePen is [Jade](http://jade-lang.com/), [SCSS](http://sass-lang.com/) and
 [jQuery](http://jquery.com/).
 
 **ioioPen** uses this setup and configures the fantastic [BrowserSync](http://www.browsersync.io/) to get a similar
-development experience to CodePen. I also added an auto prefixer for CSS, source maps and code checkers for CSS, HTML
+development experience to CodePen. I also added an auto prefixer for CSS, source maps and PostCSS, HTML
 and JavaScript.
 
 It is based on the JavaScript runtime [Node.js](https://nodejs.org/), the task automation system
