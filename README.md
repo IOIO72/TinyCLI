@@ -1,23 +1,48 @@
-# ioioPen - A lightweight starter for Gulp, Bower, Jade, SCSS via PostCSS, jQuery and BrowerSync
+# ioioPen - A starter project with Gulp, Bower, Jade, SCSS via PostCSS, jQuery and BrowerSync
 
-I love to use [CodePen](http://codepen.io/) to start experimenting seamlessly from a first inspiration to soon visible
-results.
+I love to use [CodePen](http://codepen.io/) with my default setup [Jade](http://jade-lang.com/),
+[SCSS](http://sass-lang.com/) and [jQuery](http://jquery.com/) to start experimenting seamlessly from a first
+inspiration to soon visible results.
 
 Sometimes these experiments are seeds for larger projects, which require a version control system and some other stuff,
 which CodePen doesn't provide.
 
-That's the reason why I set up this boilerplate code, which I call **ioioPen** in derivation of the name _CodePen_ and
-my alias name _IOIO_.
+That's the reason why I set up this starter project template, which I call **ioioPen** in derivation of the name
+_CodePen_ and my alias name _IOIO_.
 
-My default setup on CodePen is [Jade](http://jade-lang.com/), [SCSS](http://sass-lang.com/) and
-[jQuery](http://jquery.com/).
+Just setup this project and copy your CodePen sources _(Jade, SCSS, jQuery JS)_ to it for further development.
 
-**ioioPen** uses this setup and configures the fantastic [BrowserSync](http://www.browsersync.io/) to get a similar
-development experience to CodePen. I also added an auto prefixer for CSS, source maps and PostCSS, HTML
-and JavaScript.
+## Configured modules
 
-It is based on the JavaScript runtime [Node.js](https://nodejs.org/), the task automation system
-[Gulp.js](http://gulpjs.com/) and the package manager [Bower](http://bower.io/) to get jQuery.
+**ioioPen** uses this setup by using the following modules.
+
+### Language modules
+
+* [Jade](http://jade-lang.com/) preprocessor to generate HTML.
+* [jQuery](http://jquery.com/) library for simplified writing of JavaScripts.
+* [PostCSS](https://github.com/postcss/postcss) with [PreCSS](https://jonathantneal.github.io/precss/) to offer
+  [SCSS](http://sass-lang.com/)-like CSS.
+
+### Development environment modules
+
+* [BrowserSync](http://www.browsersync.io/) to get a similar development experience to CodePen.
+* [Node.js](https://nodejs.org/) for running JavaScript.
+* [Gulp.js](http://gulpjs.com/) for task automation.
+* [Bower](http://bower.io/) to download packages from the web, like jQuery.
+
+### Extending
+
+The setup is focused on the CodePen setup, I described in the introduction. It's intentionally just configured to
+migrate your CodePen project to your local development environment in a fast and easy way.
+
+**But** it can be extended very easily for your project's proposes. Everything is prepared for extension:
+
+* **PostCSS** is a modular system for CSS that can be configured to nearly everything you like very easily. A very hot
+  candidate you should take a look at is [cssnext](http://cssnext.io/).
+* You can control everything you would usually download manually with **Bower** to keep track of updates and save the
+  package reference. _ioioPen_ currently just uses the _jQuery_ package. Take a look at
+  [bowers search](http://bower.io/search/) to search for things like _modernizr_, _angular_, _bootstrap_, etc.
+* And of cause you can use _npm_ and _Gulp_ to [add modules](http://gulpjs.com/plugins/).
 
 # Setup
 
