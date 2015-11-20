@@ -42,7 +42,7 @@ migrate your CodePen project to your local development environment in a fast and
 * You can control everything you would usually download manually with **Bower** to keep track of updates and save the
   package reference. _ioioPen_ currently just uses the _jQuery_ package. Take a look at
   [bowers search](http://bower.io/search/) to search for things like _modernizr_, _angular_, _bootstrap_, etc.
-* And of cause you can use _npm_ and _Gulp_ to [add modules](http://gulpjs.com/plugins/).
+* And of cause you can use **npm** and **Gulp** to [add modules](http://gulpjs.com/plugins/).
 
 # Setup
 
