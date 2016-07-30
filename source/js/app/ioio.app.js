@@ -3,6 +3,8 @@
 
 (function app() {
 
+    const markdown = new showdown.Converter();
+
     const event = {
         init() {
             view.$body.on('keyup', this.onKeyUp)
@@ -286,6 +288,9 @@
                 case 'rss':
                     this.getFeedYQL(cmd.arguments[0]);
                     break;
+                case 'bbs':
+                    out = markdown.makeHtml('#Hello, markdown!');
+                    break;
                 default:
                     out = `'${cmd.command}' command not found`;
                     break;
@@ -335,7 +340,8 @@
     };
 
     (function init() {
-        $(document).ready(() => {
+        $(document).ready(
+            () => {
                 view.init();
                 event.init();
             }

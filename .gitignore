@@ -2,5 +2,5 @@
 /node_modules
 /build
 /.idea
-/source/js/vendor/jquery.min.js
+/source/js/vendor
 /npm-debug.log

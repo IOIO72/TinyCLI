@@ -21,7 +21,8 @@ var gulp            = require('gulp'),
 // copy the jQuery bower package to the source directory.
 gulp.task('copy:bower', function () {
     gulp.src([
-            './bower_components/jquery/dist/jquery.min.js'
+            './bower_components/jquery/dist/jquery.min.js',
+            './bower_components/showdown/dist/showdown.min.js'
         ])
         .pipe(gulpCopy('./source/js/vendor', {prefix: 3}))
     ;

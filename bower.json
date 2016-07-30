@@ -25,6 +25,7 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": "~3.1.0"
+    "jquery": "~3.1.0",
+    "showdown": "^1.4.2"
   }
 }
