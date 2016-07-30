@@ -18,7 +18,7 @@ h1 {
   font-size: 10vh;
   font-weight: normal;
   text-align: center;
-  leine-height: 1;
+  line-height: 1;
   margin: 5vh 0;
 }
 
@@ -28,12 +28,10 @@ h1 {
   left: 50%;
   transform: translate(-50%,-50%);
   background-color: black;
-  box-shadow: 0px 0px 9px 2px rgba(0,0,0,0.75);
+  box-shadow: 0 0 9px 2px rgba(0,0,0,0.75);
   color: white;
-  font: {
-    family: monospace;
-    size: 1rem;
-  }
+  font-family: monospace;
+  font-size: 1rem;
   padding: 1rem;
   width: 40rem;
   height: 20rem;
@@ -61,14 +59,12 @@ h1 {
     &.cursor {
       background-color: white;
       color: black;
-      animation: {
-        name: blink;
-        timing-function: steps(1);
-        direction: alternate;
-        fill-mode: none;
-        duration: 500ms;
-        iteration-count: infinite;
-      }
+      animation-name: blink;
+      animation-timing-function: steps(1);
+      animation-direction: alternate;
+      animation-fill-mode: none;
+      animation-duration: 500ms;
+      animation-iteration-count: infinite;
     }
   }
 }

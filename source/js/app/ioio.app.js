@@ -5,14 +5,11 @@
 
     const event = {
         init() {
-            view.$document.ready(this.onDomReady);
             view.$body.on('keyup', this.onKeyUp)
                 .on('keydown', this.onKeyDown)
                 .on('keypress', this.onKeyPress);
             this.initPrompt();
             view.$window.on('scroll touchmove mousewheel', this.onScroll);
-        },
-        onDomReady() {
             view.initCursor();
         },
         initPrompt() {
@@ -338,8 +335,11 @@
     };
 
     (function init() {
-        view.init();
-        event.init();
+        $(document).ready(() => {
+                view.init();
+                event.init();
+            }
+        )
     }());
 
 }());
