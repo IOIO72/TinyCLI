@@ -10,7 +10,7 @@
     "url": "https://github.com/IOIO72/ioioPen/issues",
     "email": "tamio@honma.de"
   },
-  "license" : "SEE LICENSE IN LICENSE.md",
+  "license": "SEE LICENSE IN LICENSE.md",
   "scripts": {
     "start": "gulp serve",
     "test": "gulp build"
@@ -20,9 +20,12 @@
   },
   "devDependencies": {
     "autoprefixer": "^6.1.0",
+    "babel-preset-es2015": "^6.9.0",
     "browser-sync": "^2.9.11",
     "gulp": "*",
+    "gulp-babel": "^6.1.2",
     "gulp-clean-dest": "^0.1.0",
+    "gulp-concat": "^2.6.0",
     "gulp-copy": "0.0.2",
     "gulp-ext-replace": "^0.2.0",
     "gulp-html5-lint": "^1.0.1",

@@ -2,8 +2,10 @@
 
 // required modules
 var gulp            = require('gulp'),
+    babel           = require('gulp-babel'),
     autoprefixer    = require('autoprefixer'),
     sourcemaps      = require('gulp-sourcemaps'),
+    concat          = require('gulp-concat'),
     postcss         = require('gulp-postcss'),
     precss          = require('precss'),
     ext_replace     = require('gulp-ext-replace'),
@@ -28,11 +30,21 @@ gulp.task('copy:bower', function () {
 // copy all javascripts from source to destination.
 gulp.task('copy:js', function () {
     gulp.src([
-            './source/js/**/*.js'
+            './source/js/vendor/**/*.js'
         ])
-        .pipe(cleanDest('./build/js'))
-        .pipe(gulpCopy('./build/js', {prefix: 2}))
+        .pipe(cleanDest('./build/js/vendor'))
+        .pipe(gulpCopy('./build/js/vendor', {prefix: 3}))
     ;
+});
+
+// compile es2015 to js.
+gulp.task('js:babel', function () {
+    return gulp.src('./source/js/app/**/*.js')
+        .pipe(sourcemaps.init())
+        .pipe(babel())
+        .pipe(concat('app.js'))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('./build/js'));
 });
 
 // check JavaScript while building.
@@ -71,6 +83,7 @@ gulp.task('css', function () {
 gulp.task('build', [
         'copy:bower',
         'copy:js',
+        'js:babel',
         'templates',
         'css'
     ]
@@ -85,7 +98,7 @@ var _watcher = function (blnReload) {
         },
         {
             src: 'source/js/**/*.js',
-            tasks: ['copy:js', 'lint']
+            tasks: ['copy:js', 'js:babel']
         },
         {
             src: 'source/css/**/*.scss',

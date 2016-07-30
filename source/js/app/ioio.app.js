@@ -1,38 +1,26 @@
 // Author: Tamio Patrick Honma <tamio@honma.de>
 // License: MIT
 
-// just rename `ioioApp` to your app's name in the whole object.
-window.ioioApp = {
-
-    Config: {
-        // constants and other configuration objects.
-    },
-
-    Event: {
-        init: function() {
-            $(document).ready(this.onDocumentReady);
+(function app() {
+    const event = {
+        init() {
+            $(document).ready(this.onDomReady);
         },
-        onDocumentReady: function() {
-            // add event listeners for the document here
+        onDomReady() {
         }
-        // add your `on event` methods here
-    },
-
-    View: {
-        init: function() {
+    };
+    const view = {
+        init() {
+            this.$document = $(document);
+            this.$window = $(window);
+            this.$scroll = $('html, body');
             this.$body = $('body');
-            // add jQuery objects or DOM objects here
         }
-        // add your view methods here
-    },
-
-    Controller: {
-        // add your controller methods here
-    },
-
-    init: function() {
-        ioioApp.Event.init();
-    }
-
-};
-ioioApp.init();
+    };
+    const controller = {
+    };
+    (function init() {
+        view.init();
+        event.init();
+    }());
+}());
