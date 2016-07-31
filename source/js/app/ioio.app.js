@@ -320,15 +320,26 @@
                 case '?':
                 case 'h':
                 case 'help':
-                    out = `Some commands:<br>${this.encodeHtmlEntity('bbs, cls, about, help, calc <simple math>, search <phrase>, loadwb, web <url>, rss <url>, exit')}`;
+                    out = `Commands:<br>
+                        bbs <i>[contents of this site]</i><br>
+                        calc &lt;simple math&gt; <i>[simple math calculator]</i><br>
+                        rss &lt;url&gt; <i>[list contents of an rss feed]</i><br>
+                        search &lt;phrase&gt; <i>[search the web]</i><br>
+                        web &lt;url&gt; <i>[go to url]</i><br>
+                        loadwb <i>[dive into nostalgia]</i><br>
+                        cls <i>[clear screen]</i><br>
+                        about, help<br>
+                        exit`;
                     break;
                 case 'eval':
                 case 'calc':
                     out = `${eval(cmd.arguments.join(' '))}`;
                     break;
-                case 'search':
                 case 'google':
                     window.location.href = encodeURI(`https://www.google.com/search?q=${cmd.arguments.join(' ')}`);
+                    break;
+                case 'search':
+                    window.location.href = encodeURI(`http://www.goosh.org/#${cmd.arguments.join(' ')}`);
                     break;
                 case 'goto':
                 case 'web':

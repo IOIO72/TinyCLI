@@ -1,70 +1,87 @@
 @keyframes blink {
-  0% {
-    background-color: white;
-    color: black;
-  }
-  50% {
-    background-color: black;
-    color: white;
-  }
+    0% {
+        background-color: white;
+        color: black;
+    }
+    50% {
+        background-color: black;
+        color: white;
+    }
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  background-color: grey;
+    background-color: grey;
 }
 
 h1 {
-  font-family: monospace;
-  font-size: 10vh;
-  font-weight: normal;
-  text-align: center;
-  line-height: 1;
-  margin: 5vh 0;
+    font-family: monospace;
+    font-size: 10vh;
+    font-weight: normal;
+    text-align: center;
+    line-height: 1;
+    margin: 5vh 0;
 }
 
 #terminal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
-  background-color: black;
-  box-shadow: 0 0 9px 2px rgba(0,0,0,0.75);
-  color: white;
-  font-family: monospace;
-  font-size: 1rem;
-  padding: 1rem;
-  width: 40rem;
-  height: 20rem;
-  overflow: auto;
-  a {
+    position: absolute;
+    background-color: black;
+    box-shadow: 0 0 9px 2px rgba(0, 0, 0, 0.75);
     color: white;
-    text-decoration: underline;
-  }
-  .label::before {
-    content: '>';
-    display: inline-block;
-    position: relative;
-    width: 1rem;
-    height: 1em;
-  }
-  .output {
-    color: darkGray;
-  }
+    font-family: monospace;
+    font-size: 1rem;
+    padding: 1rem;
+    margin: 1rem;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: auto;
+
+    a {
+        color: white;
+        text-decoration: underline;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        margin: .4em 0;
+        text-align: left;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .label::before {
+        content: '>';
+        display: inline-block;
+        position: relative;
+        width: 1rem;
+        height: 1em;
+    }
+
+    .output {
+        color: darkGray;
+    }
 }
 
 #cli {
-  position: relative;
-  white-space: pre-wrap;
-  span {
-    &.cursor {
-      background-color: white;
-      color: black;
-      animation-name: blink;
-      animation-timing-function: steps(1);
-      animation-direction: alternate;
-      animation-fill-mode: none;
-      animation-duration: 500ms;
-      animation-iteration-count: infinite;
+    position: relative;
+    white-space: pre-wrap;
+    span {
+        &.cursor {
+            background-color: white;
+            color: black;
+            animation-name: blink;
+            animation-timing-function: steps(1);
+            animation-direction: alternate;
+            animation-fill-mode: none;
+            animation-duration: 500ms;
+            animation-iteration-count: infinite;
+        }
     }
-  }
 }
