@@ -42,6 +42,7 @@
             this.initPrompt();
             view.$window.on('scroll touchmove mousewheel', this.onScroll);
             view.initCursor();
+            this.executeHashInTerminal();
         },
 
         initPrompt() {
@@ -49,6 +50,13 @@
                 .on('command', this.onCommand)
                 .on('async:feed', this.onAsyncFeed)
                 .on('async:markdown', this.onAsyncText);
+        },
+
+        executeHashInTerminal() {
+            const hash = location.hash.substr(1);
+            if (hash) {
+                controller.executePresetString(hash);
+            }
         },
 
         onCommand(e, c) {
@@ -417,6 +425,14 @@
                     break;
             }
             return out;
+        },
+
+        executePresetString(str) {
+            if (str) {
+                view.$prompt.html(str);
+                view.moveCursor(str.length);
+                view.enterCommandLine();
+            }
         },
 
         getCommand(prompt = '') {
