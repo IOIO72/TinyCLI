@@ -2,7 +2,7 @@
 
 Welcome to the bulletin-board.de.
 
-This page lists the content of http://bulletin-board.de.
+Here you find the contents of http://bulletin-board.de.
 
 ## Projects
 

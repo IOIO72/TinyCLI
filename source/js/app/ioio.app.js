@@ -7,10 +7,18 @@
         baseUrl: "assets/articles/",
         boards: [
             {
-                name: "projects",
+                name: "bulletin-board.de",
                 articles: [
                     {
                         "name": "index.md"
+                    }
+                ]
+            },
+            {
+                name: "personal",
+                articles: [
+                    {
+                        "name": "tamio.md"
                     }
                 ]
             }
@@ -312,10 +320,10 @@
                     break;
                 case 'exit':
                     view.$terminal.remove();
-                    view.$window.history.back();
+                    window.history.back();
                     break;
                 case 'about':
-                    out = `Made by Tamio Patrick Honma (<a href="https://about.me/honma">about.me</a>)<br>MIT License (MIT) Copyright (c) 2016 Tamio Honma<br>Use the command 'licences' to see all licences of this website.`;
+                    out = `Made by Tamio Patrick Honma (<a href="https://about.me/honma" target="_blank">about.me</a>)<br>MIT License (MIT) Copyright (c) 2016 Tamio Honma<br>Use the command 'licences' to see all licences of this website.`;
                     break;
                 case 'licences':
                 case 'licence':
@@ -343,20 +351,28 @@
                     out = `${eval(cmd.arguments.join(' '))}`;
                     break;
                 case 'google':
-                    window.location.href = encodeURI(`https://www.google.com/search?q=${cmd.arguments.join(' ')}`);
+                    this.openUrl(encodeURI(`https://www.google.com/search?q=${cmd.arguments.join(' ')}`));
                     break;
                 case 'search':
-                    window.location.href = encodeURI(`http://www.goosh.org/#${cmd.arguments.join(' ')}`);
+                    this.openUrl(encodeURI(`http://www.goosh.org/#${cmd.arguments.join(' ')}`));
                     break;
                 case 'goto':
                 case 'web':
-                    window.location.href = encodeURI(`${cmd.arguments[0]}`);
+                    if (this.openUrl(encodeURI(`${cmd.arguments[0]}`))) {
+                        out = `Opened '${cmd.arguments[0]}'`;
+                    } else {
+                        out = 'Usage: web &lt;url&gt;';
+                    }
                     break;
                 case 'loadwb':
-                    window.location.href = "http://pnacl-amiga-emulator.appspot.com/";
+                    this.openUrl("http://pnacl-amiga-emulator.appspot.com/");
                     break;
                 case 'rss':
-                    this.getFeedYQL(cmd.arguments[0]);
+                    if (this.getFeedYQL(cmd.arguments[0])) {
+                        out = `Trying to open '${cmd.arguments[0]}' `;
+                    } else {
+                        out = 'Usage: rss &lt;url&gt;';
+                    }
                     break;
                 case 'bbs':
                     if (cmd.arguments.length === 0) {
@@ -367,7 +383,7 @@
                     }
                     break;
                 default:
-                    out = `'${cmd.command}' command not found`;
+                    out = `Command '${cmd.command}' not found`;
                     break;
             }
             return out;
@@ -398,10 +414,15 @@
         },
 
         getFeedYQL(url) {
-            const yql = `https://query.yahooapis.com/v1/public/yql?q=select%20title%2Clink%2Cdescription%20from%20rss%20where%20url%3D%22${encodeURI(url)}%3Fformat%3Dxml%22&format=json&diagnostics=true&callback=`;
-            $.getJSON(yql, (data) => {
-                view.$prompt.trigger('async:feed', data);
-            }, "jsonp");
+            if (typeof url === 'undefined' || url === 'undefined' || url.length === 0) {
+                return false;
+            } else {
+                const yql = `https://query.yahooapis.com/v1/public/yql?q=select%20title%2Clink%2Cdescription%20from%20rss%20where%20url%3D%22${encodeURI(url)}%3Fformat%3Dxml%22&format=json&diagnostics=true&callback=`;
+                $.getJSON(yql, (data) => {
+                    view.$prompt.trigger('async:feed', data);
+                }, "jsonp");
+                return true;
+            }
         },
 
         getBBSArticle(name, baseUrl = '') {
@@ -451,6 +472,15 @@
                 buf.unshift(['&#', str[i].charCodeAt(), ';'].join(''));
             }
             return buf.join('');
+        },
+
+        openUrl(url) {
+            if (typeof url === 'undefined' || url === 'undefined' || url.length === 0) {
+                return false;
+            } else {
+                window.open(url, '_blank');
+                return true;
+            }
         }
     };
 
