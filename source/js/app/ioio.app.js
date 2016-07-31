@@ -21,6 +21,14 @@
                         "name": "tamio.md"
                     }
                 ]
+            },
+            {
+                name: "links",
+                articles: [
+                    {
+                        "name": "amiga.md"
+                    }
+                ]
             }
         ]
     };
@@ -342,6 +350,7 @@
                         search &lt;phrase&gt; <i>[search the web]</i><br>
                         web &lt;url&gt; <i>[go to url]</i><br>
                         loadwb <i>[dive into nostalgia]</i><br>
+                        shirt <i>[express nostalgia]</i><br>
                         cls <i>[clear screen]</i><br>
                         about, licences, help<br>
                         exit`;
@@ -364,9 +373,6 @@
                         out = 'Usage: web &lt;url&gt;';
                     }
                     break;
-                case 'loadwb':
-                    this.openUrl("http://pnacl-amiga-emulator.appspot.com/");
-                    break;
                 case 'rss':
                     if (this.getFeedYQL(cmd.arguments[0])) {
                         out = `Trying to open '${cmd.arguments[0]}' `;
@@ -381,6 +387,12 @@
                     } else {
                         this.getBBSArticle(cmd.arguments[0], bbsContent.baseUrl);
                     }
+                    break;
+                case 'loadwb':
+                    this.openUrl("http://pnacl-amiga-emulator.appspot.com/");
+                    break;
+                case 'shirt':
+                    this.openUrl("http://lemon.spreadshirt.co.uk/de/shell-A8380690/customize/color/317");
                     break;
                 default:
                     out = `Command '${cmd.command}' not found`;
