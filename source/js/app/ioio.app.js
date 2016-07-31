@@ -153,7 +153,7 @@
             this.$history = false;
             this.curPos = 0;
             this.isScrolling = false;
-            this.scrollSpeed = 1000;
+            this.scrollSpeed = 800;
         },
 
         clearTerminal() {
@@ -283,7 +283,7 @@
                 direction = ($.isNumeric(direction) && Math.abs(direction) === 1) ? direction : 1;
                 let th = this.$terminal[0].scrollHeight,
                     ch = this.$terminal.height(),
-                    offset = this.$terminal.scrollTop() + th * direction,
+                    offset = this.$terminal.scrollTop() + ch * direction,
                     adjusted = (offset < 0) ? 0 : (offset + ch > th) ? th - ch : offset;
                     view.$terminal.animate({
                         scrollTop: adjusted
