@@ -3,9 +3,22 @@
 
 (function app() {
 
-    const markdown = new showdown.Converter();
+    const bbsContent = {
+        baseUrl: "assets/articles/",
+        boards: [
+            {
+                name: "projects",
+                articles: [
+                    {
+                        "name": "index.md"
+                    }
+                ]
+            }
+        ]
+    };
 
     const event = {
+
         init() {
             view.$body.on('keyup', this.onKeyUp)
                 .on('keydown', this.onKeyDown)
@@ -14,19 +27,29 @@
             view.$window.on('scroll touchmove mousewheel', this.onScroll);
             view.initCursor();
         },
+
         initPrompt() {
             view.$prompt.on('ctrlChar', this.onCtrlChar)
                 .on('command', this.onCommand)
-                .on('async', this.onAsync);
+                .on('async:feed', this.onAsyncFeed)
+                .on('async:markdown', this.onAsyncText);
         },
+
         onCommand(e, c) {
             e.preventDefault();
             view.outputCommandResult(controller.executeCommand(c));
         },
-        onAsync(e, d) {
+
+        onAsyncFeed(e, d) {
             e.preventDefault();
             view.outputCommandResult(controller.getFeedArticles(d));
         },
+
+        onAsyncText(e, d) {
+            e.preventDefault();
+            view.outputCommandResult(d);
+        },
+
         onCtrlChar(e, t) {
             e.preventDefault();
             //console.log(`codename: ${t}`);
@@ -68,16 +91,20 @@
                     break;
             }
         },
+
         onKeyUp(e) {
             e.preventDefault();
         },
+
         onKeyDown(e) {
             e.preventDefault();
             view.typeChar(e.key);
         },
+
         onKeyPress(e) {
             e.preventDefault();
         },
+
         onScroll(e) {
             if (view.isScrolling === true) {
                 e.preventDefault();
@@ -87,6 +114,7 @@
     };
 
     const view = {
+
         init() {
             this.$document = $(document);
             this.$window = $(window);
@@ -99,6 +127,7 @@
             }
             this.initTerminal();
         },
+
         initTerminal() {
             this.$cli = $('#cli');
             if (this.$cli.length===0) {
@@ -110,11 +139,13 @@
             this.isScrolling = false;
             this.scrollSpeed = 1000;
         },
+
         clearTerminal() {
             this.$terminal.html(`<div class="print"></div><div id="cli"><span class="label"></span><span class="prompt"></span></div>`);
             this.initTerminal();
             event.initPrompt();
         },
+
         typeChar(c) {
             let realChr = controller.triggerCtrlCodes(c);
             if (realChr != '') {
@@ -128,6 +159,7 @@
                 this.curPos = this.curPos + 1;
             }
         },
+
         deleteChar() {
             if (this.curPos > 0) {
                 this.removeCursor();
@@ -137,6 +169,7 @@
                 this.setCursor();
             }
         },
+
         moveCursorBack() {
             if (this.curPos > 0) {
                 this.removeCursor();
@@ -144,6 +177,7 @@
                 this.setCursor();
             }
         },
+
         moveCursorForward() {
             this.removeCursor();
             if (this.curPos < this.$prompt.text().length) {
@@ -151,16 +185,19 @@
             }
             this.setCursor();
         },
+
         moveCursor(pos = 0) {
             this.curPos = pos;
             this.setCursor();
         },
+
         initCursor(char = "&nbsp;") {
             this.removeCursor();
             this.curPos = 0;
             this.$history = false;
             this.$prompt.html(this.getCursor(char));
         },
+
         setCursor() {
             if (this.curPos >= 0) {
                 this.removeCursor();
@@ -178,9 +215,11 @@
                 }
             }
         },
+
         getCursor(char = "&nbsp;") {
             return `<span class="cursor">${char}</span>`;
         },
+
         removeCursor() {
             let $cur = this.$prompt.children('.cursor');
             let chr = $cur.html();
@@ -190,19 +229,23 @@
                 this.$prompt.html(this.$prompt.text());
             }
         },
+
         printTerminal(txt, cssClasses="command") {
             this.$cli.prev().append(`<div class="${cssClasses}">${txt}</div>`);
             this.$terminal.scrollTop(this.$terminal[0].scrollHeight);
         },
+
         enterCommandLine() {
             let p = $.trim(this.$prompt.text());
             this.printTerminal(p, "command label");
             controller.triggerCommand(p);
             this.initCursor();
         },
+
         outputCommandResult(out) {
             this.printTerminal(out, "command output");
         },
+
         promptHistory(prev = true) {
             if (this.$history === false) {
                 this.$history = (prev) ? $("#terminal .print .command.label").last() : $("#terminal .print .command.label").first();
@@ -217,6 +260,7 @@
                 this.initCursor();
             }
         },
+
         scrollPage(direction) {
             if (this.isScrolling === false) {
                 this.isScrolling = true;
@@ -239,6 +283,11 @@
     };
 
     const controller = {
+
+        init() {
+            this.markdown = new showdown.Converter();
+        },
+
         triggerCtrlCodes(codename) {
             let r = '';
             if (codename.length > 1) {
@@ -248,9 +297,11 @@
             }
             return r;
         },
+
         triggerCommand(prompt = '') {
             view.$prompt.trigger('command', this.getCommand(prompt));
         },
+
         executeCommand(cmd = {}) {
             let out = '';
             switch (cmd.command) {
@@ -261,6 +312,7 @@
                     break;
                 case 'exit':
                     view.$terminal.remove();
+                    view.$window.history.back();
                     break;
                 case 'about':
                     out = `Made by Tamio Patrick Honma (<a href="https://about.me/honma">about.me</a>)<br>MIT License (MIT) Copyright (c) 2016 Tamio Honma`;
@@ -268,7 +320,7 @@
                 case '?':
                 case 'h':
                 case 'help':
-                    out = `Some commands:<br>${this.encodeHtmlEntity('cls, about, help, calc <simple math>, search <phrase>, loadwb, web <url>, rss <url>, exit')}`;
+                    out = `Some commands:<br>${this.encodeHtmlEntity('bbs, cls, about, help, calc <simple math>, search <phrase>, loadwb, web <url>, rss <url>, exit')}`;
                     break;
                 case 'eval':
                 case 'calc':
@@ -289,7 +341,12 @@
                     this.getFeedYQL(cmd.arguments[0]);
                     break;
                 case 'bbs':
-                    out = markdown.makeHtml('#Hello, markdown!');
+                    if (cmd.arguments.length === 0) {
+                        out = this.listBBSBoards(bbsContent.boards);
+                        out = `${out}<br>Type 'bbs &lt;article name&gt;' to read an article.`;
+                    } else {
+                        this.getBBSArticle(cmd.arguments[0], bbsContent.baseUrl);
+                    }
                     break;
                 default:
                     out = `'${cmd.command}' command not found`;
@@ -297,6 +354,7 @@
             }
             return out;
         },
+
         getCommand(prompt = '') {
             let arrPrompt = prompt.split(' ');
             return {
@@ -304,6 +362,7 @@
                 'arguments': arrPrompt.filter((arg) => {return arg.length > 0;})
             }
         },
+
         getFeedArticles(json) {
             let out = '';
             try {
@@ -319,17 +378,55 @@
             }
             return out;
         },
+
         getFeedYQL(url) {
             const yql = `https://query.yahooapis.com/v1/public/yql?q=select%20title%2Clink%2Cdescription%20from%20rss%20where%20url%3D%22${encodeURI(url)}%3Fformat%3Dxml%22&format=json&diagnostics=true&callback=`;
             $.getJSON(yql, (data) => {
-                view.$prompt.trigger('async', data);
+                view.$prompt.trigger('async:feed', data);
             }, "jsonp");
         },
+
+        getBBSArticle(name, baseUrl = '') {
+            let out = '';
+            try {
+                if (name.length) {
+                    $.get(baseUrl + name, (data) => {
+                        view.$prompt.trigger('async:markdown', this.markdown.makeHtml(data));
+                    }, "text");
+                } else {
+                    out = `Error: Article not found.`;
+                }
+            } catch(e) {
+                out = `Error: Invalid article name '${name}'.<br><i>(${e})</i>`;
+            }
+            return out;
+        },
+
+        listBBSArticles(bbsArticles = null, prefix = '') {
+            let out = '';
+            $.each(bbsArticles, (i, item) => {
+                out = `${out}${prefix}${item.name}<br>`;
+            });
+            return out;
+        },
+
+        listBBSBoards(bbsBoards = null) {
+            let out = '';
+            $.each(bbsBoards, (i, item) => {
+                out = `${out}<i>Chapter '${item.name}'</i><br>`;
+                if (item.articles.length>0) {
+                    out = `${out}${this.listBBSArticles(item.articles, '&nbsp;&nbsp;&nbsp;&nbsp;')}`;
+                }
+            });
+            return out;
+        },
+
         decodeHtmlEntity(str) {
             return str.replace(/&#(\d+);/g, function(match, dec) {
                 return String.fromCharCode(dec);
             });
         },
+
         encodeHtmlEntity(str) {
             var buf = [];
             for (var i=str.length-1;i>=0;i--) {
@@ -342,6 +439,7 @@
     (function init() {
         $(document).ready(
             () => {
+                controller.init();
                 view.init();
                 event.init();
             }

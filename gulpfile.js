@@ -18,6 +18,15 @@ var gulp            = require('gulp'),
     reload          = browserSync.reload;
 
 
+// copy assets to destination directory.
+gulp.task('copy:assets', function () {
+    gulp.src([
+            './source/assets/**/*.*'
+        ])
+        .pipe(gulpCopy('./build/assets', {prefix: 2}))
+    ;
+});
+
 // copy the jQuery bower package to the source directory.
 gulp.task('copy:bower', function () {
     gulp.src([
@@ -82,6 +91,7 @@ gulp.task('css', function () {
 
 // do these tasks to build the destination files.
 gulp.task('build', [
+        'copy:assets',
         'copy:bower',
         'copy:js',
         'js:babel',
@@ -93,6 +103,10 @@ gulp.task('build', [
 // watch task function for serving or just building
 var _watcher = function (blnReload) {
     var arrWatcher = [
+        {
+            src: 'source/assets/**/*.*',
+            tasks: ['copy:assets']
+        },
         {
             src: 'source/jade/**/*.jade',
             tasks: ['templates']
