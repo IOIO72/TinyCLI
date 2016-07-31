@@ -20,16 +20,22 @@ body {
 
 h1 {
     font-family: monospace;
-    font-size: 10vh;
+    font-size: 58px;
     font-weight: normal;
     text-align: center;
     line-height: 1;
-    margin: 5vh 0;
+    margin: 12vh 0;
+    &.title {
+        position: absolute;
+        color: white;
+        top: 0;
+        width: 100%;
+    }
 }
 
 #terminal {
     position: absolute;
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.93);
     box-shadow: 0 0 9px 2px rgba(0, 0, 0, 0.75);
     color: white;
     font-family: monospace;

@@ -315,7 +315,14 @@
                     view.$window.history.back();
                     break;
                 case 'about':
-                    out = `Made by Tamio Patrick Honma (<a href="https://about.me/honma">about.me</a>)<br>MIT License (MIT) Copyright (c) 2016 Tamio Honma`;
+                    out = `Made by Tamio Patrick Honma (<a href="https://about.me/honma">about.me</a>)<br>MIT License (MIT) Copyright (c) 2016 Tamio Honma<br>Use the command 'licences' to see all licences of this website.`;
+                    break;
+                case 'licences':
+                case 'licence':
+                case 'legal':
+                case 'terms':
+                    out = `<b>TinyCLI</b>, <b>Bulletin Board CLI</b> are MIT licensed by Tamio Honma<br>
+                        <b>Efecto Matrix en 40 líneas</b> by 0utKast (http://codepen.io/0utKast/pen/GpzobR)`;
                     break;
                 case '?':
                 case 'h':
@@ -328,7 +335,7 @@
                         web &lt;url&gt; <i>[go to url]</i><br>
                         loadwb <i>[dive into nostalgia]</i><br>
                         cls <i>[clear screen]</i><br>
-                        about, help<br>
+                        about, licences, help<br>
                         exit`;
                     break;
                 case 'eval':
