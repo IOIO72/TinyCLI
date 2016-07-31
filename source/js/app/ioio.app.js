@@ -281,11 +281,11 @@
             if (this.isScrolling === false) {
                 this.isScrolling = true;
                 direction = ($.isNumeric(direction) && Math.abs(direction) === 1) ? direction : 1;
-                let dh = this.$document.height(),
-                    wh = this.$window.height(),
-                    offset = this.$window.scrollTop() + wh * direction,
-                    adjusted = (offset < 0) ? 0 : (offset + wh > dh) ? dh - wh : offset;
-                view.$scroll.animate({
+                let th = this.$terminal[0].scrollHeight,
+                    ch = this.$terminal.height(),
+                    offset = this.$terminal.scrollTop() + th * direction,
+                    adjusted = (offset < 0) ? 0 : (offset + ch > th) ? th - ch : offset;
+                    view.$terminal.animate({
                         scrollTop: adjusted
                     },
                     (offset !== adjusted) ? Math.floor(this.scrollSpeed / 6.6666) : this.scrollSpeed,
@@ -293,9 +293,27 @@
                         this.isScrolling = false
                     }
                 );
-                console.log(`'scrolling' (${this.isScrolling}) speed: ${this.scrollSpeed}; ${offset}`);
             }
         },
+
+        scrollDocumentPage(direction) {
+            if (this.isScrolling === false) {
+                this.isScrolling = true;
+                direction = ($.isNumeric(direction) && Math.abs(direction) === 1) ? direction : 1;
+                let dh = this.$document.height(),
+                    wh = this.$window.height(),
+                    offset = this.$window.scrollTop() + wh * direction,
+                    adjusted = (offset < 0) ? 0 : (offset + wh > dh) ? dh - wh : offset;
+                    view.$scroll.animate({
+                        scrollTop: adjusted
+                    },
+                    (offset !== adjusted) ? Math.floor(this.scrollSpeed / 6.6666) : this.scrollSpeed,
+                    () => {
+                        this.isScrolling = false
+                    }
+                );
+            }
+        }
     };
 
     const controller = {
