@@ -113,6 +113,9 @@
                 case 'enter':
                     view.enterCommandLine();
                     break;
+                case 'undefined':
+                    view.printTerminal(`<b>Error: Key not defined.</b><br><i>It seems, your browser doesn't support the required feature.<br>Support may be given in a later version of this CLI.</i>`, "output error");
+                    break;
             }
         },
 
@@ -122,6 +125,8 @@
 
         onKeyDown(e) {
             e.preventDefault();
+            //console.log(`key: ${e.key} keycode: ${e.keyCode} charCode: ${e.charCode} which: ${e.which}`);
+            //console.log(e);
             view.typeChar(e.key);
         },
 
@@ -177,8 +182,8 @@
                 let p = this.$prompt.html();
                 let pright = (this.curPos == p.length) ?
                     this.getCursor() :
-                this.getCursor(p.substring(this.curPos, this.curPos+1)) +
-                p.substring(this.curPos+1);
+                    this.getCursor(p.substring(this.curPos, this.curPos+1)) +
+                    p.substring(this.curPos+1);
                 this.$prompt.html(p.substring(0, this.curPos) + realChr + pright);
                 this.curPos = this.curPos + 1;
             }
@@ -332,6 +337,9 @@
 
         triggerCtrlCodes(codename) {
             let r = '';
+            if (typeof codename === 'undefined') {
+                codename = 'undefined';
+            }
             if (codename.length > 1) {
                 view.$prompt.trigger('ctrlChar', [codename]);
             } else {

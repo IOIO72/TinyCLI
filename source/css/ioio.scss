@@ -72,6 +72,9 @@ h1 {
 
     .output {
         color: darkGray;
+        &.error {
+            color: darkred;
+        }
     }
 }
 
