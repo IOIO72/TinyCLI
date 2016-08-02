@@ -1,0 +1,31 @@
+{
+    "toc": [
+        {
+            "name": "bulletin-board.de",
+            "articles": [
+                {
+                    "name": "start.md"
+                }
+            ]
+        },
+        {
+            "name": "personal",
+            "articles": [
+                {
+                    "name": "tamio.md"
+                },
+                {
+                    "name": "historic.md"
+                }
+            ]
+        },
+        {
+            "name": "links",
+            "articles": [
+                {
+                    "name": "amiga.md"
+                }
+            ]
+        }
+    ]
+}

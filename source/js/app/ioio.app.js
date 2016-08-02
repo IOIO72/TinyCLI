@@ -3,37 +3,11 @@
 
 (function app() {
 
-    const bbsContent = {
-        baseUrl: "assets/articles/",
-        boards: [
-            {
-                name: "bulletin-board.de",
-                articles: [
-                    {
-                        "name": "index.md"
-                    }
-                ]
-            },
-            {
-                name: "personal",
-                articles: [
-                    {
-                        "name": "tamio.md"
-                    },
-                    {
-                        "name": "historic.md"
-                    }
-                ]
-            },
-            {
-                name: "links",
-                articles: [
-                    {
-                        "name": "amiga.md"
-                    }
-                ]
-            }
-        ]
+
+    let bbsContent = {
+        jsonurl: "assets/articles/_toc.json",
+        baseurl: "assets/articles/",
+        boards: {}
     };
 
     const event = {
@@ -52,6 +26,7 @@
             view.$prompt.on('ctrlChar', this.onCtrlChar)
                 .on('command', this.onCommand)
                 .on('async:feed', this.onAsyncFeed)
+                .on('async:bbs', this.onAsyncBBS)
                 .on('async:markdown', this.onAsyncText);
         },
 
@@ -70,6 +45,11 @@
         onAsyncFeed(e, d) {
             e.preventDefault();
             view.outputCommandResult(controller.getFeedArticles(d));
+        },
+
+        onAsyncBBS(e, d) {
+            e.preventDefault();
+            bbsContent.boards = d.toc;
         },
 
         onAsyncText(e, d) {
@@ -336,6 +316,7 @@
 
         init() {
             this.markdown = new showdown.Converter();
+            this.getBBSTOC(bbsContent.jsonurl);
         },
 
         triggerCtrlCodes(codename) {
@@ -423,7 +404,7 @@
                         out = this.listBBSBoards(bbsContent.boards);
                         out = `${out}<br>Type 'bbs &lt;article name&gt;' to read an article.`;
                     } else {
-                        this.getBBSArticle(cmd.arguments[0], bbsContent.baseUrl);
+                        this.getBBSArticle(cmd.arguments[0], bbsContent.baseurl);
                     }
                     break;
                 case 'loadwb':
@@ -483,6 +464,20 @@
             }
         },
 
+        getBBSTOC(jsonUrl) {
+            if (typeof jsonUrl === 'undefined' || jsonUrl === 'undefined' || jsonUrl.length === 0) {
+                return false;
+            } else {
+                try {
+                    $.getJSON(jsonUrl, (data) => {
+                        view.$prompt.trigger('async:bbs', data);
+                    }, "json");
+                } catch(e) {
+                    out = `Error: Couldn't get '${jsonUrl}' to load BBS table of contents.`
+                }
+            }
+        },
+
         getBBSArticle(name, baseUrl = '') {
             let out = '';
             try {
@@ -499,7 +494,7 @@
             return out;
         },
 
-        listBBSArticles(bbsArticles = null, prefix = '') {
+        listBBSArticles(bbsArticles, prefix = '') {
             let out = '';
             $.each(bbsArticles, (i, item) => {
                 out = `${out}${prefix}${item.name}<br>`;
@@ -507,14 +502,18 @@
             return out;
         },
 
-        listBBSBoards(bbsBoards = null) {
+        listBBSBoards(bbsBoards) {
             let out = '';
-            $.each(bbsBoards, (i, item) => {
-                out = `${out}<i>Chapter '${item.name}'</i><br>`;
-                if (item.articles.length>0) {
-                    out = `${out}${this.listBBSArticles(item.articles, '&nbsp;&nbsp;&nbsp;&nbsp;')}`;
-                }
-            });
+            if (bbsBoards) {
+                $.each(bbsBoards, (i, item) => {
+                    out = `${out}<i>Chapter '${item.name}'</i><br>`;
+                    if (item.articles.length>0) {
+                        out = `${out}${this.listBBSArticles(item.articles, '&nbsp;&nbsp;&nbsp;&nbsp;')}`;
+                    }
+                });
+            } else {
+                out = `Error: No bulletin board data available.`
+            }
             return out;
         },
 
