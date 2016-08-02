@@ -19,6 +19,9 @@
                 articles: [
                     {
                         "name": "tamio.md"
+                    },
+                    {
+                        "name": "historic.md"
                     }
                 ]
             },
