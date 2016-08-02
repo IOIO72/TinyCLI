@@ -372,6 +372,7 @@
                 case 'legal':
                 case 'terms':
                     out = `<b>TinyCLI</b>, <b>Bulletin Board CLI</b> are MIT licensed by Tamio Honma<br>
+                        <b>keyboardevent-key-polyfill</b> by Chris van Wiemeersch und MIT<br>
                         <b>Efecto Matrix en 40 líneas</b> by 0utKast (http://codepen.io/0utKast/pen/GpzobR)`;
                     break;
                 case '?':
@@ -541,6 +542,7 @@
     (function init() {
         $(document).ready(
             () => {
+                window.keyboardeventKeyPolyfill.polyfill();
                 controller.init();
                 view.init();
                 event.init();
