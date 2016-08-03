@@ -152,12 +152,8 @@
     const event = {
 
         init() {
-            myBBS = new BBS(view.$prompt, {
-                onArticleLoaded: 'async:markdown'
-            });
-            myRSS = new RSS(view.$prompt, {
-                onFeedLoaded: 'async:feed'
-            });
+            myBBS = new BBS(view.$prompt, { onArticleLoaded: 'async:markdown' });
+            myRSS = new RSS(view.$prompt, { onFeedLoaded: 'async:feed' });
             view.$body.on('keyup', this.onKeyUp)
                 .on('keydown', this.onKeyDown)
                 .on('keypress', this.onKeyPress);
@@ -452,10 +448,6 @@
     };
 
     const controller = {
-
-        init() {
-
-        },
 
         triggerCtrlCodes(codename) {
             let r = '';
