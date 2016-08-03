@@ -3,16 +3,39 @@
 
 (function app() {
 
-    class BBS {
+    class LoadJSON {
         constructor($el, options = {}) {
             if (!(window.jQuery)) {
-                throw new Error('Please include jQuery to use the BBS class.');
+                throw new Error('Please include jQuery to use the RSS class.');
             }
+            this.$el = $el;
+            this.eventNames = {
+                onLoaded: (options.hasOwnProperty('onLoaded')) ? options.onLoaded : 'json:loaded'
+            };
+        }
+
+        static decodeHtmlEntity(str) {
+            return str.replace(/&#(\d+);/g, function(match, dec) {
+                return String.fromCharCode(dec);
+            });
+        }
+
+        static encodeHtmlEntity(str) {
+            var buf = [];
+            for (var i=str.length-1;i>=0;i--) {
+                buf.unshift(['&#', str[i].charCodeAt(), ';'].join(''));
+            }
+            return buf.join('');
+        }
+    }
+
+    class BBS extends LoadJSON {
+        constructor($el, options = {}) {
+            super($el, options);
             if (!(window.showdown)) {
                 throw new Error('Please include showdown.min.js to use the BBS class.');
             }
             this.markdown = new showdown.Converter();
-            this.$el = $el;
             this.eventNames = {
                 onTocLoaded: (options.hasOwnProperty('onTocLoaded')) ? options.onTocLoaded : 'bbs:loaded',
                 onArticleLoaded: (options.hasOwnProperty('onArticleLoaded')) ? options.onArticleLoaded : 'bbs:article'
@@ -70,7 +93,6 @@
 
         listBoards(bbsBoards = this.boards) {
             let out = '';
-            console.log(bbsBoards);
             if (bbsBoards) {
                 $.each(bbsBoards, (i, item) => {
                     out = `${out}<i>Chapter '${item.name}'</i><br>`;
@@ -86,12 +108,9 @@
 
     }
 
-    class RSS {
+    class RSS extends LoadJSON {
         constructor($el, options = {}) {
-            if (!(window.jQuery)) {
-                throw new Error('Please include jQuery to use the RSS class.');
-            }
-            this.$el = $el;
+            super($el, options);
             this.eventNames = {
                 onFeedLoaded: (options.hasOwnProperty('onFeedLoaded')) ? options.onFeedLoaded : 'feed:loaded'
             };
@@ -125,19 +144,6 @@
             }
         }
 
-        static decodeHtmlEntity(str) {
-            return str.replace(/&#(\d+);/g, function(match, dec) {
-                return String.fromCharCode(dec);
-            });
-        }
-
-        static encodeHtmlEntity(str) {
-            var buf = [];
-            for (var i=str.length-1;i>=0;i--) {
-                buf.unshift(['&#', str[i].charCodeAt(), ';'].join(''));
-            }
-            return buf.join('');
-        }
     }
 
     let myBBS,
