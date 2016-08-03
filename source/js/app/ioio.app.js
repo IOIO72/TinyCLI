@@ -3,16 +3,97 @@
 
 (function app() {
 
+    class BBS {
+        constructor($el, options = {}) {
+            if (!(window.jQuery)) {
+                throw new Error('Please include jQuery to use the BBS class.');
+            }
+            if (!(window.showdown)) {
+                throw new Error('Please include showdown.min.js to use the BBS class.');
+            }
+            this.markdown = new showdown.Converter();
+            this.$el = $el;
+            this.eventNames = {
+                onTocLoaded: (options.hasOwnProperty('onTocLoaded')) ? options.onTocLoaded : 'bbs:loaded',
+                onArticleLoaded: (options.hasOwnProperty('onArticleLoaded')) ? options.onArticleLoaded : 'bbs:article'
+            };
+            this.tocJSON = (options.hasOwnProperty('tocJSON')) ? options.tocJSON : "assets/articles/_toc.json";
+            this.baseUrl = (options.hasOwnProperty('baseUrl')) ? options.baseUrl : "assets/articles/";
+            this.boards = (options.hasOwnProperty('boards')) ? options.boards : {};
+            if (this.tocJSON.length > 0 && $.isEmptyObject(this.boards)) {
+                this.$el.on(this.eventNames.onTocLoaded, this.onTocLoaded.bind(this));
+                this.getToc();
+            }
+        }
 
-    let bbsContent = {
-        jsonurl: "assets/articles/_toc.json",
-        baseurl: "assets/articles/",
-        boards: {}
-    };
+        onTocLoaded(e, d) {
+            this.boards = d.toc;
+        }
+
+        getToc(jsonUrl = this.tocJSON) {
+            if (typeof jsonUrl === 'undefined' || jsonUrl === 'undefined' || jsonUrl.length === 0) {
+                return false;
+            } else {
+                try {
+                    $.getJSON(jsonUrl, (data) => {
+                        this.$el.trigger(this.eventNames.onTocLoaded, data);
+                    }, "json");
+                } catch(e) {
+                    return `Error: Couldn't get '${jsonUrl}' to load BBS table of contents.`
+                }
+            }
+        }
+
+        getArticle(name, baseUrl = this.baseUrl) {
+            let out = '';
+            try {
+                if (name.length) {
+                    $.get(baseUrl + name, (data) => {
+                        this.$el.trigger(this.eventNames.onArticleLoaded, this.markdown.makeHtml(data));
+                    }, "text");
+                } else {
+                    out = `Error: Article not found.`;
+                }
+            } catch(e) {
+                out = `Error: Invalid article name '${name}'.<br><i>(${e})</i>`;
+            }
+            return out;
+        }
+
+        listArticles(bbsArticles, prefix = '') {
+            let out = '';
+            $.each(bbsArticles, (i, item) => {
+                out = `${out}${prefix}${item.name}<br>`;
+            });
+            return out;
+        }
+
+        listBoards(bbsBoards = this.boards) {
+            let out = '';
+            console.log(bbsBoards);
+            if (bbsBoards) {
+                $.each(bbsBoards, (i, item) => {
+                    out = `${out}<i>Chapter '${item.name}'</i><br>`;
+                    if (item.articles.length>0) {
+                        out = `${out}${this.listArticles(item.articles, '&nbsp;&nbsp;&nbsp;&nbsp;')}`;
+                    }
+                });
+            } else {
+                out = `Error: No bulletin board data available.`
+            }
+            return out;
+        }
+
+    }
+
+    let myBBS;
 
     const event = {
 
         init() {
+            myBBS = new BBS(view.$prompt, {
+                onArticleLoaded: 'async:markdown'
+            });
             view.$body.on('keyup', this.onKeyUp)
                 .on('keydown', this.onKeyDown)
                 .on('keypress', this.onKeyPress);
@@ -26,7 +107,6 @@
             view.$prompt.on('ctrlChar', this.onCtrlChar)
                 .on('command', this.onCommand)
                 .on('async:feed', this.onAsyncFeed)
-                .on('async:bbs', this.onAsyncBBS)
                 .on('async:markdown', this.onAsyncText);
         },
 
@@ -45,11 +125,6 @@
         onAsyncFeed(e, d) {
             e.preventDefault();
             view.outputCommandResult(controller.getFeedArticles(d));
-        },
-
-        onAsyncBBS(e, d) {
-            e.preventDefault();
-            bbsContent.boards = d.toc;
         },
 
         onAsyncText(e, d) {
@@ -315,8 +390,7 @@
     const controller = {
 
         init() {
-            this.markdown = new showdown.Converter();
-            this.getBBSTOC(bbsContent.jsonurl);
+
         },
 
         triggerCtrlCodes(codename) {
@@ -401,10 +475,10 @@
                     break;
                 case 'bbs':
                     if (cmd.arguments.length === 0) {
-                        out = this.listBBSBoards(bbsContent.boards);
+                        out = myBBS.listBoards();
                         out = `${out}<br>Type 'bbs &lt;article name&gt;' to read an article.`;
                     } else {
-                        this.getBBSArticle(cmd.arguments[0], bbsContent.baseurl);
+                        myBBS.getArticle(cmd.arguments[0]);
                     }
                     break;
                 case 'loadwb':
@@ -464,59 +538,6 @@
             }
         },
 
-        getBBSTOC(jsonUrl) {
-            if (typeof jsonUrl === 'undefined' || jsonUrl === 'undefined' || jsonUrl.length === 0) {
-                return false;
-            } else {
-                try {
-                    $.getJSON(jsonUrl, (data) => {
-                        view.$prompt.trigger('async:bbs', data);
-                    }, "json");
-                } catch(e) {
-                    out = `Error: Couldn't get '${jsonUrl}' to load BBS table of contents.`
-                }
-            }
-        },
-
-        getBBSArticle(name, baseUrl = '') {
-            let out = '';
-            try {
-                if (name.length) {
-                    $.get(baseUrl + name, (data) => {
-                        view.$prompt.trigger('async:markdown', this.markdown.makeHtml(data));
-                    }, "text");
-                } else {
-                    out = `Error: Article not found.`;
-                }
-            } catch(e) {
-                out = `Error: Invalid article name '${name}'.<br><i>(${e})</i>`;
-            }
-            return out;
-        },
-
-        listBBSArticles(bbsArticles, prefix = '') {
-            let out = '';
-            $.each(bbsArticles, (i, item) => {
-                out = `${out}${prefix}${item.name}<br>`;
-            });
-            return out;
-        },
-
-        listBBSBoards(bbsBoards) {
-            let out = '';
-            if (bbsBoards) {
-                $.each(bbsBoards, (i, item) => {
-                    out = `${out}<i>Chapter '${item.name}'</i><br>`;
-                    if (item.articles.length>0) {
-                        out = `${out}${this.listBBSArticles(item.articles, '&nbsp;&nbsp;&nbsp;&nbsp;')}`;
-                    }
-                });
-            } else {
-                out = `Error: No bulletin board data available.`
-            }
-            return out;
-        },
-
         decodeHtmlEntity(str) {
             return str.replace(/&#(\d+);/g, function(match, dec) {
                 return String.fromCharCode(dec);
@@ -545,7 +566,6 @@
         $(document).ready(
             () => {
                 window.keyboardeventKeyPolyfill.polyfill();
-                controller.init();
                 view.init();
                 event.init();
             }
