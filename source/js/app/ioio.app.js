@@ -86,13 +86,71 @@
 
     }
 
-    let myBBS;
+    class RSS {
+        constructor($el, options = {}) {
+            if (!(window.jQuery)) {
+                throw new Error('Please include jQuery to use the RSS class.');
+            }
+            this.$el = $el;
+            this.eventNames = {
+                onFeedLoaded: (options.hasOwnProperty('onFeedLoaded')) ? options.onFeedLoaded : 'feed:loaded'
+            };
+        }
+
+        getFeedArticles(json) {
+            let out = '';
+            try {
+                if ($.isArray(json.query.results.item)) {
+                    $.each(json.query.results.item, (i, item) => {
+                        out = `${out}<a href="${item.link}" title="${RSS.encodeHtmlEntity(item.description)}">${item.title}</a><br>`;
+                    });
+                } else {
+                    out = 'Error: No feed articles found.';
+                }
+            } catch(e) {
+                out = `Error: Invalid feed. Please use a valid url.<br><i>(${e})</i>`;
+            }
+            return out;
+        }
+
+        getFeedYQL(url) {
+            if (typeof url === 'undefined' || url === 'undefined' || url.length === 0) {
+                return false;
+            } else {
+                const yql = `https://query.yahooapis.com/v1/public/yql?q=select%20title%2Clink%2Cdescription%20from%20rss%20where%20url%3D%22${encodeURI(url)}%3Fformat%3Dxml%22&format=json&diagnostics=true&callback=`;
+                $.getJSON(yql, (data) => {
+                    this.$el.trigger(this.eventNames.onFeedLoaded, data);
+                }, "jsonp");
+                return true;
+            }
+        }
+
+        static decodeHtmlEntity(str) {
+            return str.replace(/&#(\d+);/g, function(match, dec) {
+                return String.fromCharCode(dec);
+            });
+        }
+
+        static encodeHtmlEntity(str) {
+            var buf = [];
+            for (var i=str.length-1;i>=0;i--) {
+                buf.unshift(['&#', str[i].charCodeAt(), ';'].join(''));
+            }
+            return buf.join('');
+        }
+    }
+
+    let myBBS,
+        myRSS;
 
     const event = {
 
         init() {
             myBBS = new BBS(view.$prompt, {
                 onArticleLoaded: 'async:markdown'
+            });
+            myRSS = new RSS(view.$prompt, {
+                onFeedLoaded: 'async:feed'
             });
             view.$body.on('keyup', this.onKeyUp)
                 .on('keydown', this.onKeyDown)
@@ -124,7 +182,7 @@
 
         onAsyncFeed(e, d) {
             e.preventDefault();
-            view.outputCommandResult(controller.getFeedArticles(d));
+            view.outputCommandResult(myRSS.getFeedArticles(d));
         },
 
         onAsyncText(e, d) {
@@ -467,7 +525,7 @@
                     }
                     break;
                 case 'rss':
-                    if (this.getFeedYQL(cmd.arguments[0])) {
+                    if (myRSS.getFeedYQL(cmd.arguments[0])) {
                         out = `Trying to open '${cmd.arguments[0]}' `;
                     } else {
                         out = 'Usage: rss &lt;url&gt;';
@@ -508,48 +566,6 @@
                 'command': arrPrompt.shift().toLowerCase(),
                 'arguments': arrPrompt.filter((arg) => {return arg.length > 0;})
             }
-        },
-
-        getFeedArticles(json) {
-            let out = '';
-            try {
-                if ($.isArray(json.query.results.item)) {
-                    $.each(json.query.results.item, (i, item) => {
-                        out = `${out}<a href="${item.link}" title="${this.encodeHtmlEntity(item.description)}">${item.title}</a><br>`;
-                    });
-                } else {
-                    out = 'Error: No feed articles found.';
-                }
-            } catch(e) {
-                out = `Error: Invalid feed. Please use a valid url.<br><i>(${e})</i>`;
-            }
-            return out;
-        },
-
-        getFeedYQL(url) {
-            if (typeof url === 'undefined' || url === 'undefined' || url.length === 0) {
-                return false;
-            } else {
-                const yql = `https://query.yahooapis.com/v1/public/yql?q=select%20title%2Clink%2Cdescription%20from%20rss%20where%20url%3D%22${encodeURI(url)}%3Fformat%3Dxml%22&format=json&diagnostics=true&callback=`;
-                $.getJSON(yql, (data) => {
-                    view.$prompt.trigger('async:feed', data);
-                }, "jsonp");
-                return true;
-            }
-        },
-
-        decodeHtmlEntity(str) {
-            return str.replace(/&#(\d+);/g, function(match, dec) {
-                return String.fromCharCode(dec);
-            });
-        },
-
-        encodeHtmlEntity(str) {
-            var buf = [];
-            for (var i=str.length-1;i>=0;i--) {
-                buf.unshift(['&#', str[i].charCodeAt(), ';'].join(''));
-            }
-            return buf.join('');
         },
 
         openUrl(url) {
