@@ -90,7 +90,7 @@
         listArticles(bbsArticles, prefix = '') {
             let out = '';
             $.each(bbsArticles, (i, item) => {
-                out = `${out}${prefix}${item.name}<br>`;
+                out = `${out}${prefix}<b>${item.name}</b><br>`;
             });
             return out;
         }
@@ -99,7 +99,7 @@
             let out = '';
             if (bbsBoards) {
                 $.each(bbsBoards, (i, item) => {
-                    out = `${out}<i>Chapter '${item.name}'</i><br>`;
+                    out = `${out}<br><small>Chapter '${item.name}'</small><br>`;
                     if (item.articles.length>0) {
                         out = `${out}${this.listArticles(item.articles, '&nbsp;&nbsp;&nbsp;&nbsp;')}`;
                     }
