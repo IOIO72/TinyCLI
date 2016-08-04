@@ -35,6 +35,7 @@
             if (!(window.showdown)) {
                 throw new Error('Please include showdown.min.js to use the BBS class.');
             }
+            const outFn = (options.hasOwnProperty('outFn')) ? options.outFn : console.info;
             this.markdown = new showdown.Converter();
             this.eventNames.onLoad = (options.hasOwnProperty('onLoad')) ? options.onLoad : 'bbs:loaded';
             this.eventNames.onArticleLoad = (options.hasOwnProperty('onArticleLoad')) ? options.onArticleLoad : 'bbs:article';
@@ -45,6 +46,11 @@
                 this.$el.on(this.eventNames.onLoad, this.onLoad.bind(this));
                 this.getToc();
             }
+            this.$el.on(this.eventNames.onArticleLoad,
+                (e, d) => {
+                    outFn(d);
+                }
+            );
         }
 
         onLoad(e, d) {
@@ -111,7 +117,7 @@
             super($el, options);
             this.eventNames.onLoad = (options.hasOwnProperty('onLoad')) ? options.onLoad : 'feed:loaded';
             const outFn = (options.hasOwnProperty('outFn')) ? options.outFn : console.info;
-            $el.on(this.eventNames.onLoad,
+            this.$el.on(this.eventNames.onLoad,
                 (e, d) => {
                     outFn(this.getFeedArticles(d));
                 }
@@ -154,7 +160,7 @@
     const event = {
 
         init() {
-            myBBS = new BBS(view.$prompt, { onArticleLoad: 'async:markdown' });
+            myBBS = new BBS(view.$prompt, { outFn: view.outputCommandResult.bind(view) });
             myRSS = new RSS(view.$prompt, { outFn: view.outputCommandResult.bind(view) });
             view.$body.on('keyup', this.onKeyUp)
                 .on('keydown', this.onKeyDown)
@@ -167,8 +173,7 @@
 
         initPrompt() {
             view.$prompt.on('ctrlChar', this.onCtrlChar)
-                .on('command', this.onCommand)
-                .on('async:markdown', this.onAsyncText);
+                .on('command', this.onCommand);
         },
 
         executeHashInTerminal() {
@@ -181,11 +186,6 @@
         onCommand(e, c) {
             e.preventDefault();
             view.outputCommandResult(controller.executeCommand(c));
-        },
-
-        onAsyncText(e, d) {
-            e.preventDefault();
-            view.outputCommandResult(d);
         },
 
         onCtrlChar(e, t) {
