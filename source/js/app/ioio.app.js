@@ -10,7 +10,7 @@
             }
             this.$el = $el;
             this.eventNames = {
-                onLoaded: (options.hasOwnProperty('onLoaded')) ? options.onLoaded : 'json:loaded'
+                onLoad: (options.hasOwnProperty('onLoad')) ? options.onLoad : 'json:loaded'
             };
         }
 
@@ -36,20 +36,18 @@
                 throw new Error('Please include showdown.min.js to use the BBS class.');
             }
             this.markdown = new showdown.Converter();
-            this.eventNames = {
-                onTocLoaded: (options.hasOwnProperty('onTocLoaded')) ? options.onTocLoaded : 'bbs:loaded',
-                onArticleLoaded: (options.hasOwnProperty('onArticleLoaded')) ? options.onArticleLoaded : 'bbs:article'
-            };
+            this.eventNames.onLoad = (options.hasOwnProperty('onLoad')) ? options.onLoad : 'bbs:loaded';
+            this.eventNames.onArticleLoad = (options.hasOwnProperty('onArticleLoad')) ? options.onArticleLoad : 'bbs:article';
             this.tocJSON = (options.hasOwnProperty('tocJSON')) ? options.tocJSON : "assets/articles/_toc.json";
             this.baseUrl = (options.hasOwnProperty('baseUrl')) ? options.baseUrl : "assets/articles/";
             this.boards = (options.hasOwnProperty('boards')) ? options.boards : {};
             if (this.tocJSON.length > 0 && $.isEmptyObject(this.boards)) {
-                this.$el.on(this.eventNames.onTocLoaded, this.onTocLoaded.bind(this));
+                this.$el.on(this.eventNames.onLoad, this.onLoad.bind(this));
                 this.getToc();
             }
         }
 
-        onTocLoaded(e, d) {
+        onLoad(e, d) {
             this.boards = d.toc;
         }
 
@@ -59,7 +57,7 @@
             } else {
                 try {
                     $.getJSON(jsonUrl, (data) => {
-                        this.$el.trigger(this.eventNames.onTocLoaded, data);
+                        this.$el.trigger(this.eventNames.onLoad, data);
                     }, "json");
                 } catch(e) {
                     return `Error: Couldn't get '${jsonUrl}' to load BBS table of contents.`
@@ -72,7 +70,7 @@
             try {
                 if (name.length) {
                     $.get(baseUrl + name, (data) => {
-                        this.$el.trigger(this.eventNames.onArticleLoaded, this.markdown.makeHtml(data));
+                        this.$el.trigger(this.eventNames.onArticleLoad, this.markdown.makeHtml(data));
                     }, "text");
                 } else {
                     out = `Error: Article not found.`;
@@ -111,9 +109,7 @@
     class RSS extends LoadJSON {
         constructor($el, options = {}) {
             super($el, options);
-            this.eventNames = {
-                onFeedLoaded: (options.hasOwnProperty('onFeedLoaded')) ? options.onFeedLoaded : 'feed:loaded'
-            };
+            this.eventNames.onLoad = (options.hasOwnProperty('onLoad')) ? options.onLoad : 'feed:loaded';
         }
 
         getFeedArticles(json) {
@@ -138,7 +134,7 @@
             } else {
                 const yql = `https://query.yahooapis.com/v1/public/yql?q=select%20title%2Clink%2Cdescription%20from%20rss%20where%20url%3D%22${encodeURI(url)}%3Fformat%3Dxml%22&format=json&diagnostics=true&callback=`;
                 $.getJSON(yql, (data) => {
-                    this.$el.trigger(this.eventNames.onFeedLoaded, data);
+                    this.$el.trigger(this.eventNames.onLoad, data);
                 }, "jsonp");
                 return true;
             }
@@ -152,8 +148,8 @@
     const event = {
 
         init() {
-            myBBS = new BBS(view.$prompt, { onArticleLoaded: 'async:markdown' });
-            myRSS = new RSS(view.$prompt, { onFeedLoaded: 'async:feed' });
+            myBBS = new BBS(view.$prompt, { onArticleLoad: 'async:markdown' });
+            myRSS = new RSS(view.$prompt, { onLoad: 'async:feed' });
             view.$body.on('keyup', this.onKeyUp)
                 .on('keydown', this.onKeyDown)
                 .on('keypress', this.onKeyPress);
