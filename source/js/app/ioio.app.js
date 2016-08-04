@@ -491,6 +491,9 @@
                     out = `Commands:<br>
                         bbs <i>[contents of this site]</i><br>
                         calc &lt;simple math&gt; <i>[simple math calculator]</i><br>
+                        len &lt;text&gt; <i>[length of text]</i><br>
+                        ucase &lt;text&gt; <i>[upper case text]</i><br>
+                        lcase &lt;text&gt; <i>[lower case text]</i><br>
                         rss &lt;url&gt; <i>[list contents of an rss feed]</i><br>
                         search &lt;phrase&gt; <i>[search the web]</i><br>
                         web &lt;url&gt; <i>[go to url]</i><br>
@@ -503,6 +506,20 @@
                 case 'eval':
                 case 'calc':
                     out = `${eval(cmd.arguments.join(' '))}`;
+                    break;
+                case 'length':
+                case 'len':
+                    out = cmd.arguments.join(' ').length;
+                    break;
+                case 'upper':
+                case 'uppercase':
+                case 'ucase':
+                    out = cmd.arguments.join(' ').toLocaleUpperCase();
+                    break;
+                case 'lower':
+                case 'lowercase':
+                case 'lcase':
+                    out = cmd.arguments.join(' ').toLocaleLowerCase();
                     break;
                 case 'google':
                     this.openUrl(encodeURI(`https://www.google.com/search?q=${cmd.arguments.join(' ')}`));
