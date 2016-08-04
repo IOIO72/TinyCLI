@@ -110,6 +110,12 @@
         constructor($el, options = {}) {
             super($el, options);
             this.eventNames.onLoad = (options.hasOwnProperty('onLoad')) ? options.onLoad : 'feed:loaded';
+            const outFn = (options.hasOwnProperty('outFn')) ? options.outFn : console.info;
+            $el.on(this.eventNames.onLoad,
+                (e, d) => {
+                    outFn(this.getFeedArticles(d));
+                }
+            );
         }
 
         getFeedArticles(json) {
@@ -149,7 +155,7 @@
 
         init() {
             myBBS = new BBS(view.$prompt, { onArticleLoad: 'async:markdown' });
-            myRSS = new RSS(view.$prompt, { onLoad: 'async:feed' });
+            myRSS = new RSS(view.$prompt, { outFn: view.outputCommandResult.bind(view) });
             view.$body.on('keyup', this.onKeyUp)
                 .on('keydown', this.onKeyDown)
                 .on('keypress', this.onKeyPress);
@@ -162,7 +168,6 @@
         initPrompt() {
             view.$prompt.on('ctrlChar', this.onCtrlChar)
                 .on('command', this.onCommand)
-                .on('async:feed', this.onAsyncFeed)
                 .on('async:markdown', this.onAsyncText);
         },
 
@@ -176,11 +181,6 @@
         onCommand(e, c) {
             e.preventDefault();
             view.outputCommandResult(controller.executeCommand(c));
-        },
-
-        onAsyncFeed(e, d) {
-            e.preventDefault();
-            view.outputCommandResult(myRSS.getFeedArticles(d));
         },
 
         onAsyncText(e, d) {
