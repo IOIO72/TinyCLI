@@ -13,3 +13,10 @@
 * [Some spacy kind of WIP](https://web.archive.org/web/20060418052851/http://www.honma.de/)
 * [Blog IOIO](https://web.archive.org/web/20081021035432/http://www.honma.de/)
 * [Blog IOIO ...](https://web.archive.org/web/20090207033541/http://www.honma.de/)
+
+## Some of my early projects
+
+* [Novell Deutschland - 1996](https://web.archive.org/web/19970608074940/http://www.novell.de/index1.htm)
+* [Jet Executive - 1996](https://web.archive.org/web/20000823175628/http://www.jetexecutive.com/)
+* [TCC Chemnitz - 1997](https://web.archive.org/web/19970326233208/http://www.tcc-chemnitz.de/)
+* [Handelsblatt - 1997](https://web.archive.org/web/19991127151256/http://www.handelsblatt.de/cgi-bin/hbi.exe?fn=hb&sfn=hp)
