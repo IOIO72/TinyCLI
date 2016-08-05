@@ -489,17 +489,17 @@
                 case 'h':
                 case 'help':
                     out = `Commands:<br>
-                        bbs <i>[contents of this site]</i><br>
-                        calc &lt;simple math&gt; <i>[simple math calculator]</i><br>
-                        len &lt;text&gt; <i>[length of text]</i><br>
-                        ucase &lt;text&gt; <i>[upper case text]</i><br>
-                        lcase &lt;text&gt; <i>[lower case text]</i><br>
-                        rss &lt;url&gt; <i>[list contents of an rss feed]</i><br>
-                        search &lt;phrase&gt; <i>[search the web]</i><br>
-                        web &lt;url&gt; <i>[go to url]</i><br>
-                        loadwb <i>[dive into nostalgia]</i><br>
-                        shirt <i>[express nostalgia]</i><br>
-                        cls <i>[clear screen]</i><br>
+                        bbs <small>[contents of this site]</small><br>
+                        calc &lt;simple math&gt; <small>[simple math calculator]</small><br>
+                        len &lt;text&gt; <small>[length of text]</small><br>
+                        ucase &lt;text&gt; <small>[upper case text]</small><br>
+                        lcase &lt;text&gt; <small>[lower case text]</small><br>
+                        rss &lt;url&gt; <small>[list contents of an rss feed]</small><br>
+                        search &lt;phrase&gt; <small>[search the web]</small><br>
+                        web &lt;url&gt; <small>[go to url]</small><br>
+                        loadwb <small>[dive into nostalgia]</small><br>
+                        shirt <small>[express nostalgia]</small><br>
+                        cls <small>[clear screen]</small><br>
                         about, licences, help<br>
                         exit`;
                     break;
