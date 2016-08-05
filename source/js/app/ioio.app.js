@@ -276,7 +276,7 @@
             if (this.$cli.length===0) {
                 this.clearTerminal();
             }
-            this.$prompt = $('#cli .prompt');
+            this.$prompt = $('#prompt');
             this.$history = false;
             this.curPos = 0;
             this.isScrolling = false;
@@ -284,7 +284,7 @@
         },
 
         clearTerminal() {
-            this.$terminal.html(`<div class="print"></div><div id="cli"><span class="label"></span><span class="prompt"></span></div>`);
+            this.$terminal.html(`<div class="print"></div><div id="cli"><span class="label"></span><span id="prompt"></span></div>`);
             this.initTerminal();
             event.initPrompt();
         },
