@@ -10,12 +10,12 @@
                 throw new Error('Please include jQuery to use the RSS class.');
             }
             this.$el = $el;
-            this.$el.append(`<input id="input-clipboard" class="hidden" type="text" value="" />`);
+            this.$el.append(`<input id="input-clipboard" class="clipboard-hidden" type="text" value="" />`);
             this.$clipboardInput = $('#input-clipboard');
             this.userInput = "";
             this.hiddenInputListener = function(text) {};
             this.setEvents();
-            $(document).mouseup(this.focusHiddenArea);
+            $(document).mouseup(this.focusHiddenArea.bind(this));
         }
 
         static create($el) {
@@ -55,6 +55,7 @@
 
         focusHiddenArea() {
             // In order to ensure that the browser will fire clipboard events, we always need to have something selected
+            console.log(this.$clipboardInput);
             this.$clipboardInput.val(' ');
             this.$clipboardInput.focus().select();
         }
@@ -78,7 +79,7 @@
     class IEClipboard extends Clipboard {
         constructor($el = $('body')) {
             super($el);
-            this.$el.append(`<div id="ie-clipboard" class="hidden" contenteditable="true"></div>`);
+            this.$el.append(`<div id="ie-clipboard" class="clipboard-hidden" contenteditable="true"></div>`);
             this.$clipboardIE = $('#ie-clipboard');
             document.addEventListener('beforepaste', () => {
                 if (this.$clipboardInput.is(':focus')) {
@@ -610,7 +611,7 @@
                     case 'v':
                         if (e.metaKey || e.ctrlKey) {
                             r = true;
-                            console.log(`COPY (metakey: ${e.metaKey}; ctrlkey: ${e.ctrlKey})`);
+                            //console.log(`COPY (metakey: ${e.metaKey}; ctrlkey: ${e.ctrlKey})`);
                         }
                         break;
                 }
