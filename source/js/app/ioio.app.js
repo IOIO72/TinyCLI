@@ -4,139 +4,15 @@
 (function app() {
 
     class Clipboard {
-        // Adapted to class construction from https://www.lucidchart.com/techblog/2014/12/02/definitive-guide-copying-pasting-javascript/
-        constructor($el = $('body')) {
-            if (!(window.jQuery)) {
-                throw new Error('Please include jQuery to use the RSS class.');
-            }
-            this.$el = $el;
-            this.$el.append(`<input id="input-clipboard" class="clipboard-hidden" type="text" value="" />`);
-            this.$clipboardInput = $('#input-clipboard');
-            this.userInput = "";
-            this.hiddenInputListener = function(text) {};
-            this.setEvents();
-            $(document).mouseup(this.focusHiddenArea.bind(this));
+        // This is an interim version to support pasting content into the CLI, because the cross-browser-support of clipboard handling is complicated.
+
+        getText() {
+            return prompt('Paste your text');
         }
 
-        static create($el) {
-            const isIe = (navigator.userAgent.toLowerCase().indexOf("msie") != -1 || navigator.userAgent.toLowerCase().indexOf("trident") != -1);
-            const ChildClass = isIe ? IEClipboard : DefaultClipboard;
-            return new ChildClass($el);
+        setText(text) {
+            prompt('Copy the text', text);
         }
-
-        setEvents() {
-            this.$clipboardInput.on('input', () => {
-                const isSafari = navigator.appVersion.search('Safari') != -1 && navigator.appVersion.search('Chrome') == -1 && navigator.appVersion.search('CrMo') == -1 && navigator.appVersion.search('CriOS') == -1;
-                this.userInput += this.$clipboardInput.val();
-                this.hiddenInputListener(this.userInput);
-                // There is a bug (sometimes) with Safari and the input area can't be updated during
-                // the input event, so we update the input area after the event is done being processed
-                if (isSafari) {
-                    this.$clipboardInput.focus();
-                    setTimeout(this.focusHiddenArea, 0);
-                } else {
-                    this.focusHiddenArea();
-                }
-            });
-            this.clipboardListener();
-        }
-
-        clipboardListener() {
-            // Set clipboard event listeners on the document.
-            ['cut', 'copy', 'paste'].forEach(function(event) {
-                document.addEventListener(event, function(e) {
-                    console.log(event);
-                    this.clipboardEvent(event, e);
-                    this.focusHiddenArea();
-                    e.preventDefault();
-                })
-            })
-        }
-
-        focusHiddenArea() {
-            // In order to ensure that the browser will fire clipboard events, we always need to have something selected
-            console.log(this.$clipboardInput);
-            this.$clipboardInput.val(' ');
-            this.$clipboardInput.focus().select();
-        }
-
-        clipboardEvent(clipboardEvent, event, copyData = {}) {
-            const clipboardData = event.clipboardData,
-                textToCopy = (copyData.hasOwnProperty('textData')) ? copyData.textData : '',
-                htmlToCopy = (copyData.hasOwnProperty('htmlData')) ? copyData.htmlData : '';
-            if (clipboardEvent == 'cut' || clipboardEvent == 'copy') {
-                clipboardData.setData('text/plain', textToCopy);
-                clipboardData.setData('text/html', htmlToCopy);
-            }
-            if (clipboardEvent == 'paste') {
-                console.log('Clipboard Plain Text: ' + clipboardData.getData('text/plain'));
-                console.log('Clipboard HTML: ' + clipboardData.getData('text/html'));
-            }
-        }
-
-    }
-
-    class IEClipboard extends Clipboard {
-        constructor($el = $('body')) {
-            super($el);
-            this.$el.append(`<div id="ie-clipboard" class="clipboard-hidden" contenteditable="true"></div>`);
-            this.$clipboardIE = $('#ie-clipboard');
-            document.addEventListener('beforepaste', () => {
-                if (this.$clipboardInput.is(':focus')) {
-                    this.focusIEArea();
-                }
-            }, true);
-        }
-
-        clipboardListener() {
-            // Set clipboard event listeners on the document.
-            ['cut', 'copy', 'paste'].forEach(function(event) {
-                document.addEventListener(event, function(e) {
-                    console.log(event);
-                    this.clipboardEvent(event);
-                })
-            })
-        }
-
-        focusIEArea() {
-            // Focuses an element to be ready for copy/paste (used exclusively for IE)
-            this.$clipboardIE.focus();
-            const range = document.createRange();
-            range.selectNodeContents((this.$clipboardIE.get(0)));
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-        }
-
-        clipboardEvent(clipboardEvent, event = undefined, copyData = {}) {
-            // For IE, we can get/set Text or URL just as we normally would, but to get HTML, we need to let the browser perform the copy or paste
-            // in a contenteditable div.
-            const clipboardData = window.clipboardData,
-                textToCopy = (copyData.hasOwnProperty('textData')) ? copyData.textData : '',
-                htmlToCopy = (copyData.hasOwnProperty('htmlData')) ? copyData.htmlData : '';
-            if (clipboardEvent == 'cut' || clipboardEvent == 'copy') {
-                clipboardData.setData('Text', textToCopy);
-                this.$clipboardIE.html(htmlToCopy);
-                this.focusIEArea();
-                setTimeout(function() {
-                    this.focusHiddenArea();
-                    this.$clipboardIE.empty();
-                }, 0);
-            }
-            if (clipboardEvent == 'paste') {
-                const clipboardText = clipboardData.getData('Text');
-                this.$clipboardIE.empty();
-                setTimeout(function() {
-                    console.log('Clipboard Plain Text: ' + clipboardText);
-                    console.log('Clipboard HTML: ' + this.$clipboardIE.html());
-                    this.$clipboardIE.empty();
-                    this.focusHiddenArea();
-                }, 0);
-            }
-        };
-    }
-
-    class DefaultClipboard extends Clipboard {
 
     }
 
@@ -300,7 +176,7 @@
         init() {
             myBBS = new BBS(view.$prompt, { outFn: view.outputCommandResult.bind(view) });
             myRSS = new RSS(view.$prompt, { outFn: view.outputCommandResult.bind(view) });
-            myClipboard = Clipboard.create($('body'));
+            myClipboard = new Clipboard();
             view.$body.on('keyup', this.onKeyUp)
                 .on('keydown', this.onKeyDown)
                 .on('keypress', this.onKeyPress);
@@ -544,6 +420,15 @@
             }
         },
 
+        insertText(text = '') {
+            if (text.length > 0) {
+                let p = this.$prompt.html();
+                // todo: get right of the cursor part of prompt.
+                // todo: insert and set text into prompt
+                // todo: set Cursor to right position
+            }
+        },
+
         scrollPage(direction) {
             if (this.isScrolling === false) {
                 this.isScrolling = true;
@@ -612,6 +497,7 @@
                         if (e.metaKey || e.ctrlKey) {
                             r = true;
                             //console.log(`COPY (metakey: ${e.metaKey}; ctrlkey: ${e.ctrlKey})`);
+                            console.log(`Paste ${myClipboard.getText()}`);
                         }
                         break;
                 }
