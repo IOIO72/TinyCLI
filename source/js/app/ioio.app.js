@@ -257,7 +257,7 @@
             //console.log(`key: ${e.key} keycode: ${e.keyCode} charCode: ${e.charCode} which: ${e.which}`);
             //console.log(e);
             if (controller.executeModifierCommand(e) === false) {
-                view.typeChar(controller.triggerCtrlCodes(e.key));
+                view.typeText(controller.triggerCtrlCodes(e.key));
             }
         },
 
@@ -306,16 +306,16 @@
             event.initPrompt();
         },
 
-        typeChar(keyName) {
-            if (keyName != '') {
+        typeText(txt) {
+            if (txt != '') {
                 this.removeCursor();
                 let p = this.$prompt.html();
                 let pright = (this.curPos == p.length) ?
                     this.getCursor() :
                     this.getCursor(p.substring(this.curPos, this.curPos+1)) +
                     p.substring(this.curPos+1);
-                this.$prompt.html(p.substring(0, this.curPos) + keyName + pright);
-                this.curPos = this.curPos + 1;
+                this.$prompt.html(p.substring(0, this.curPos) + txt + pright);
+                this.curPos = this.curPos + txt.length;
             }
         },
 
@@ -420,15 +420,6 @@
             }
         },
 
-        insertText(text = '') {
-            if (text.length > 0) {
-                let p = this.$prompt.html();
-                // todo: get right of the cursor part of prompt.
-                // todo: insert and set text into prompt
-                // todo: set Cursor to right position
-            }
-        },
-
         scrollPage(direction) {
             if (this.isScrolling === false) {
                 this.isScrolling = true;
@@ -488,16 +479,20 @@
         },
 
         executeModifierCommand(e) {
-            console.log(`key command`);
             let r = false;
             if (typeof e === 'object') {
-                console.log(e);
                 switch (e.key.toLowerCase()) {
                     case 'v':
                         if (e.metaKey || e.ctrlKey) {
                             r = true;
-                            //console.log(`COPY (metakey: ${e.metaKey}; ctrlkey: ${e.ctrlKey})`);
-                            console.log(`Paste ${myClipboard.getText()}`);
+                            const t = myClipboard.getText();
+                            view.typeText((t === null) ? '' : t);
+                        }
+                        break;
+                    case 'c':
+                        if (e.metaKey || e.ctrlKey) {
+                            r = true;
+                            myClipboard.setText(view.$prompt.text());
                         }
                         break;
                 }
