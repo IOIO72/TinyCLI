@@ -14,11 +14,11 @@
             return new ChildClass(pasteFn, copyFn);
         }
 
-        getTextOut(pasteFn) {
+        getTextOut(pasteFn = this.pasteFn) {
             // Not needed for standard listeners.
         }
 
-        setTextFrom(copyFn) {
+        setTextFrom(copyFn = this.copyFn) {
             // Not needed for standard listeners.
         }
 
@@ -43,15 +43,13 @@
 
     class FallbackClipboard extends Clipboard {
 
-        getTextOut(pasteFn) {
-            const pFn = (pasteFn) ? pasteFn : this.pasteFn;
+        getTextOut(pasteFn = this.pasteFn) {
             const t = prompt('Paste your text');
-            pFn((t === null) ? '' : t);
+            pasteFn((t === null) ? '' : t);
         }
 
-        setTextFrom(copyFn) {
-            const cFn = (copyFn) ? copyFn : this.copyFn;
-            prompt('Copy the text', cFn());
+        setTextFrom(copyFn = this.copyFn) {
+            prompt('Copy the text', copyFn());
         }
 
     }
