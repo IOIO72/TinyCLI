@@ -296,6 +296,7 @@
             this.$prompt = $('#prompt');
             this.$history = false;
             this.curPos = 0;
+            this.curMode = [];
             this.isScrolling = false;
             this.scrollSpeed = 800;
         },
@@ -376,7 +377,7 @@
         },
 
         getCursor(char = "&nbsp;") {
-            return `<span class="cursor">${char}</span>`;
+            return `<span class="cursor${this.getCursorModeClass()}">${char}</span>`;
         },
 
         removeCursor() {
@@ -387,6 +388,25 @@
             } else {
                 this.$prompt.html(this.$prompt.text());
             }
+        },
+
+        setCursorMode(mode = 'default') {
+            mode = mode.toLowerCase();
+            if (mode == 'default' || '') {
+                this.curMode = [];
+            } else {
+                const mi = $.inArray(mode, this.curMode);
+                if (mi < 0) {
+                    this.curMode.push(mode);
+                } else {
+                    this.curMode.splice(mi, 1);
+                }
+            }
+            this.setCursor();
+        },
+
+        getCursorModeClass() {
+            return (this.curMode.length > 0) ? ` ${this.curMode.join(' ')}` : '';
         },
 
         printTerminal(txt, cssClasses="command") {
@@ -508,6 +528,10 @@
                 case 'cls':
                     view.clearTerminal();
                     break;
+                case 'cursor':
+                    view.setCursorMode(cmd.arguments[0]);
+                    out = `Cursor mode: '${$.trim(view.getCursorModeClass())}'`;
+                    break;
                 case 'exit':
                     view.$terminal.remove();
                     window.history.back();
@@ -537,6 +561,7 @@
                         web &lt;url&gt; <small>[go to url]</small><br>
                         loadwb <small>[dive into nostalgia]</small><br>
                         shirt <small>[express nostalgia]</small><br>
+                        cursor &lt;mode&gt; <small>[default, pulse, green]</small><br>
                         cls <small>[clear screen]</small><br>
                         about, licences, help<br>
                         exit`;

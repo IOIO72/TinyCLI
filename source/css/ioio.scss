@@ -9,6 +9,39 @@
     }
 }
 
+@keyframes blinkgreen {
+    0% {
+        background-color: green;
+        color: black;
+    }
+    50% {
+        background-color: black;
+        color: white;
+    }
+}
+
+@keyframes blinkred {
+    0% {
+        background-color: darkred;
+        color: black;
+    }
+    50% {
+        background-color: black;
+        color: white;
+    }
+}
+
+@keyframes blinkblue {
+    0% {
+        background-color: blue;
+        color: black;
+    }
+    50% {
+        background-color: black;
+        color: white;
+    }
+}
+
 html, body {
     margin: 0;
     padding: 0;
@@ -94,27 +127,21 @@ h1 {
             animation-fill-mode: none;
             animation-duration: 500ms;
             animation-iteration-count: infinite;
+            &.pulse {
+                animation-timing-function: linear;
+            }
+            &.green {
+                background-color: green;
+                animation-name: blinkgreen;
+            }
+            &.red {
+                background-color: darkred;
+                animation-name: blinkred;
+            }
+            &.blue {
+                background-color: blue;
+                animation-name: blinkblue;
+            }
         }
     }
-}
-
-.clipboard-hidden {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 10px;
-    height: 10px;
-    display: block;
-    font-size: 1;
-    z-index: -1;
-    color: transparent;
-    background: transparent;
-    overflow: hidden;
-    border: none;
-    padding: 0;
-    resize: none;
-    outline: none;
-    -webkit-user-select: text;
-    user-select: text;
-    /* Because for user-select:none, Safari won't allow input */
 }
