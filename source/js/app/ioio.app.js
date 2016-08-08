@@ -5,6 +5,8 @@
 
     class Clipboard {
         constructor(pasteFn, copyFn) {
+            this.pasteFn = pasteFn;
+            this.copyFn = copyFn;
             document.addEventListener('paste',
                 (e) => {
                     pasteFn(e.clipboardData.getData('text/plain'));
@@ -40,12 +42,14 @@
     class FallbackClipboard extends Clipboard {
 
         getTextOut(pasteFn) {
+            const pFn = (pasteFn) ? pasteFn : this.pasteFn;
             const t = prompt('Paste your text');
-            pasteFn((t === null) ? '' : t);
+            pFn((t === null) ? '' : t);
         }
 
         setTextFrom(copyFn) {
-            prompt('Copy the text', copyFn());
+            const cFn = (copyFn) ? copyFn : this.copyFn;
+            prompt('Copy the text', cFn());
         }
 
     }
@@ -544,13 +548,13 @@
                     case 'v':
                         if (e.metaKey || e.ctrlKey) {
                             r = true;
-                            myClipboard.getTextOut(view.typeText.bind(view));
+                            myClipboard.getTextOut(); // usually the fallback method
                         }
                         break;
                     case 'c':
                         if (e.metaKey || e.ctrlKey) {
                             r = true;
-                            myClipboard.setTextFrom(() => {return view.$prompt.text()});
+                            myClipboard.setTextFrom(); // usually the fallback method
                         }
                         break;
                     default:
