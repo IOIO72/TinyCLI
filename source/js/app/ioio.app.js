@@ -4,14 +4,48 @@
 (function app() {
 
     class Clipboard {
-        // This is an interim version to support pasting content into the CLI, because the cross-browser-support of clipboard handling is complicated.
-
-        getText() {
-            return prompt('Paste your text');
+        constructor(pasteFn, copyFn) {
+            document.addEventListener('paste',
+                (e) => {
+                    pasteFn(e.clipboardData.getData('text/plain'));
+                }
+            );
+            document.addEventListener('copy',
+                (e) => {
+                    e.clipboardData.setData('text/plain', copyFn());
+                    e.preventDefault();
+                }
+            );
         }
 
-        setText(text) {
-            prompt('Copy the text', text);
+        static create(pasteFn, copyFn) {
+            const ChildClass = (navigator.userAgent.match(/Chrome/i)) ? StandardClipboard : FallbackClipboard; // todo: check other ways to support cross-browser clipboard handlings
+            return new ChildClass(pasteFn, copyFn);
+        }
+
+        getTextOut(pasteFn) {
+            // Not needed for standard listeners.
+        }
+
+        setTextFrom(copyFn) {
+            // Not needed for standard listeners.
+        }
+
+    }
+
+    class StandardClipboard extends Clipboard {
+
+    }
+
+    class FallbackClipboard extends Clipboard {
+
+        getTextOut(pasteFn) {
+            const t = prompt('Paste your text');
+            pasteFn((t === null) ? '' : t);
+        }
+
+        setTextFrom(copyFn) {
+            prompt('Copy the text', copyFn());
         }
 
     }
@@ -176,7 +210,12 @@
         init() {
             myBBS = new BBS(view.$prompt, { outFn: view.outputCommandResult.bind(view) });
             myRSS = new RSS(view.$prompt, { outFn: view.outputCommandResult.bind(view) });
-            myClipboard = new Clipboard();
+            myClipboard = Clipboard.create(
+                view.typeText.bind(view),
+                () => {
+                    return view.$prompt.text();
+                }
+            );
             view.$body.on('keyup', this.onKeyUp)
                 .on('keydown', this.onKeyDown)
                 .on('keypress', this.onKeyPress);
@@ -253,9 +292,9 @@
         },
 
         onKeyDown(e) {
-            e.preventDefault();
-            //console.log(`key: ${e.key} keycode: ${e.keyCode} charCode: ${e.charCode} which: ${e.which}`);
-            //console.log(e);
+            // e.preventDefault();
+            // console.log(`key: ${e.key} keycode: ${e.keyCode} charCode: ${e.charCode} which: ${e.which}`);
+            // console.log(e);
             if (controller.executeModifierCommand(e) === false) {
                 view.typeText(controller.triggerCtrlCodes(e.key));
             }
@@ -505,15 +544,17 @@
                     case 'v':
                         if (e.metaKey || e.ctrlKey) {
                             r = true;
-                            const t = myClipboard.getText();
-                            view.typeText((t === null) ? '' : t);
+                            myClipboard.getTextOut(view.typeText.bind(view));
                         }
                         break;
                     case 'c':
                         if (e.metaKey || e.ctrlKey) {
                             r = true;
-                            myClipboard.setText(view.$prompt.text());
+                            myClipboard.setTextFrom(() => {return view.$prompt.text()});
                         }
+                        break;
+                    default:
+                        e.preventDefault();
                         break;
                 }
             }
