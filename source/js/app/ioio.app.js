@@ -7,17 +7,6 @@
         constructor(pasteFn, copyFn) {
             this.pasteFn = pasteFn;
             this.copyFn = copyFn;
-            document.addEventListener('paste',
-                (e) => {
-                    pasteFn(e.clipboardData.getData('text/plain'));
-                }
-            );
-            document.addEventListener('copy',
-                (e) => {
-                    e.clipboardData.setData('text/plain', copyFn());
-                    e.preventDefault();
-                }
-            );
         }
 
         static create(pasteFn, copyFn) {
@@ -36,7 +25,20 @@
     }
 
     class StandardClipboard extends Clipboard {
-
+        constructor(pasteFn, copyFn) {
+            super(pasteFn, copyFn);
+            document.addEventListener('paste',
+                (e) => {
+                    pasteFn(e.clipboardData.getData('text/plain'));
+                }
+            );
+            document.addEventListener('copy',
+                (e) => {
+                    e.clipboardData.setData('text/plain', copyFn());
+                    e.preventDefault();
+                }
+            );
+        }
     }
 
     class FallbackClipboard extends Clipboard {
