@@ -1,6 +1,22 @@
-@keyframes blink {
+@define-extend container {
+    content: '';
+    position: absolute;
+    display: inline-block;
+}
+
+@define-extend blink-anim {
+    background-color: white;
+    animation-name: blinkwhite;
+    animation-timing-function: steps(1);
+    animation-direction: alternate;
+    animation-fill-mode: none;
+    animation-duration: 500ms;
+    animation-iteration-count: infinite;
+}
+
+@define-mixin blink $color {
     0% {
-        background-color: white;
+        background-color: $(color);
         color: black;
     }
     50% {
@@ -9,37 +25,24 @@
     }
 }
 
-@keyframes blinkgreen {
-    0% {
-        background-color: green;
-        color: black;
-    }
-    50% {
-        background-color: black;
-        color: white;
-    }
+@keyframes blinkwhite {
+    @mixin blink white;
 }
 
-@keyframes blinkred {
-    0% {
-        background-color: darkred;
-        color: black;
-    }
-    50% {
-        background-color: black;
-        color: white;
-    }
+@keyframes blinklime {
+    @mixin blink lime;
+}
+
+@keyframes blinkdarkred {
+    @mixin blink darkred;
 }
 
 @keyframes blinkblue {
-    0% {
-        background-color: blue;
-        color: black;
-    }
-    50% {
-        background-color: black;
-        color: white;
-    }
+    @mixin blink blue;
+}
+
+@keyframes blinkblack {
+    @mixin blink black;
 }
 
 html, body {
@@ -119,28 +122,43 @@ h1 {
     white-space: pre-wrap;
     span {
         &.cursor {
-            background-color: white;
+            position: relative;
             color: black;
-            animation-name: blink;
-            animation-timing-function: steps(1);
-            animation-direction: alternate;
-            animation-fill-mode: none;
-            animation-duration: 500ms;
-            animation-iteration-count: infinite;
-            &.pulse {
+            @extend blink-anim;
+            &.pulse, &.pulse.underline::before, &.pulse.thin::before {
                 animation-timing-function: linear;
             }
-            &.green {
-                background-color: green;
-                animation-name: blinkgreen;
+            &.green, &.green.underline::before,  &.green.thin::before {
+                background-color: lime;
+                animation-name: blinklime;
             }
-            &.red {
+            &.red, &.red.underline::before, &.red.thin::before {
                 background-color: darkred;
-                animation-name: blinkred;
+                animation-name: blinkdarkred;
             }
-            &.blue {
+            &.blue, &.blue.underline::before, &.blue.thin::before {
                 background-color: blue;
                 animation-name: blinkblue;
+            }
+            &.underline {
+                animation-name: blinkblack;
+                &::before {
+                    @extend container;
+                    height: 2px;
+                    width: 1ch;
+                    bottom: 0;
+                    @extend blink-anim;
+                }
+            }
+            &.thin {
+                animation-name: blinkblack;
+                &::before {
+                    @extend container;
+                    height: 1em;
+                    width: 2px;
+                    left: 0;
+                    @extend blink-anim;
+                }
             }
         }
     }
