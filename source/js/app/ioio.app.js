@@ -209,6 +209,13 @@
         myRSS,
         myClipboard;
 
+    const config = {
+        cursor: {
+            colors: ['white', 'green', 'red', 'blue'],
+            styles: ['block', 'underline', 'thin']
+        }
+    };
+
     const event = {
 
         init() {
@@ -435,16 +442,29 @@
 
         setCursorMode(mode = 'default') {
             mode = mode.toLowerCase();
-            if (mode == 'default' || '') {
-                this.curMode = [];
-            } else {
-                const mi = $.inArray(mode, this.curMode);
-                if (mi < 0) {
-                    this.curMode.push(mode);
-                } else {
-                    this.curMode.splice(mi, 1);
+            let newModeArray = this.curMode;
+            function _filterExcludingOptions(option, excludes) {
+                if ($.inArray(option, excludes) >= 0) {
+                    newModeArray = view.curMode.filter(
+                        (m) => {
+                            return $.inArray(m, excludes) < 0;
+                        }
+                    );
                 }
             }
+            if (mode == 'default' || '') {
+                newModeArray = [];
+            } else {
+                _filterExcludingOptions(mode, config.cursor.colors);
+                _filterExcludingOptions(mode, config.cursor.styles);
+                const mi = $.inArray(mode, newModeArray);
+                if (mi < 0) {
+                    newModeArray.push(mode);
+                } else {
+                    newModeArray.splice(mi, 1);
+                }
+            }
+            this.curMode = newModeArray;
             this.setCursor();
         },
 
@@ -606,7 +626,7 @@
                         web &lt;url&gt; <small>[go to url]</small><br>
                         loadwb <small>[dive into nostalgia]</small><br>
                         shirt <small>[express nostalgia]</small><br>
-                        cursor &lt;mode&gt; <small>[default, pulse, green]</small><br>
+                        cursor &lt;mode&gt; <small>[default, pulse, thin, underline, green]</small><br>
                         cls <small>[clear screen]</small><br>
                         about, licences, help<br>
                         exit`;
