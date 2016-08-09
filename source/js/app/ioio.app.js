@@ -205,16 +205,17 @@
 
     }
 
-    let myBBS,
-        myRSS,
-        myClipboard;
-
     const config = {
         cursor: {
+            help: `[default, pulse, (block, thin, underline), (white, green, red, blue)]`,
             colors: ['white', 'green', 'red', 'blue'],
             styles: ['block', 'underline', 'thin']
         }
     };
+
+    let myBBS,
+        myRSS,
+        myClipboard;
 
     const event = {
 
@@ -445,11 +446,7 @@
             let newModeArray = this.curMode;
             function _filterExcludingOptions(option, excludes) {
                 if ($.inArray(option, excludes) >= 0) {
-                    newModeArray = view.curMode.filter(
-                        (m) => {
-                            return $.inArray(m, excludes) < 0;
-                        }
-                    );
+                    newModeArray = view.curMode.filter((m) => { return $.inArray(m, excludes) < 0; });
                 }
             }
             if (mode == 'default' || '') {
@@ -587,6 +584,7 @@
 
         executeCommand(cmd = {}) {
             let out = '';
+            let helper;
             switch (cmd.command) {
                 case '':
                     break;
@@ -594,8 +592,19 @@
                     view.clearTerminal();
                     break;
                 case 'cursor':
-                    view.setCursorMode(cmd.arguments[0]);
-                    out = `Cursor mode: '${$.trim(view.getCursorModeClass())}'`;
+                    if (cmd.arguments[0] == 'help') {
+                        out = `Options: ${config.cursor.help}<br>`;
+                        cmd.arguments.shift();
+                    }
+                    for (let i = 0; i<cmd.arguments.length; i++) {
+                        view.setCursorMode(cmd.arguments[i]);
+                    }
+                    helper = $.trim(view.getCursorModeClass());
+                    if (helper === '') {
+                        out = `Options: ${config.cursor.help}`;
+                    } else {
+                        out += `Cursor mode: '${helper}'`;
+                    }
                     break;
                 case 'exit':
                     view.$terminal.remove();
@@ -609,7 +618,7 @@
                 case 'legal':
                 case 'terms':
                     out = `<b>TinyCLI</b>, <b>Bulletin Board CLI</b> are MIT licensed by Tamio Honma<br>
-                        <b>keyboardevent-key-polyfill</b> by Chris van Wiemeersch und MIT<br>
+                        <b>keyboardevent-key-polyfill</b> by Chris van Wiemeersch under MIT<br>
                         <b>Efecto Matrix en 40 líneas</b> by 0utKast (http://codepen.io/0utKast/pen/GpzobR)`;
                     break;
                 case '?':
@@ -626,7 +635,7 @@
                         web &lt;url&gt; <small>[go to url]</small><br>
                         loadwb <small>[dive into nostalgia]</small><br>
                         shirt <small>[express nostalgia]</small><br>
-                        cursor &lt;mode&gt; <small>[default, pulse, thin, underline, green]</small><br>
+                        cursor &lt;mode&gt; <small>${config.cursor.help}</small><br>
                         cls <small>[clear screen]</small><br>
                         about, licences, help<br>
                         exit`;
