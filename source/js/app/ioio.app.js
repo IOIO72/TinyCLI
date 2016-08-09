@@ -210,7 +210,18 @@
             help: `[default, pulse, (block, thin, underline), (white, green, red, blue)]`,
             colors: ['white', 'green', 'red', 'blue'],
             styles: ['block', 'underline', 'thin']
-        }
+        },
+        shirts: [
+            "http://lemon.spreadshirt.co.uk/de/shell-A8380690/customize/color/317",
+            "http://lemon.spreadshirt.co.uk/de/ready-A8813979/customize/color/4",
+            "http://lemon.spreadshirt.co.uk/de/out-of-data-error-A8373463/customize/color/4",
+            "http://lemon.spreadshirt.co.uk/de/poke-64775-3-A8373928/customize/color/4",
+            "http://lemon.spreadshirt.co.uk/de/load-8-1-A8330412/customize/color/4",
+            "http://lemon.spreadshirt.co.uk/de/ready-cap-A8317082/customize/color/14",
+            "http://lemon.spreadshirt.co.uk/de/g064-A8324936/customize/color/2",
+            "http://lemon.spreadshirt.co.uk/de/64k-ram-system-A8405480/customize/color/4",
+            "http://lemon.spreadshirt.co.uk/de/sys-4096-A8330344/customize/color/4"
+        ]
     };
 
     let myBBS,
@@ -596,7 +607,7 @@
                         out = `Options: ${config.cursor.help}<br>`;
                         cmd.arguments.shift();
                     }
-                    for (let i = 0; i<cmd.arguments.length; i++) {
+                    for (let i = 0; i < cmd.arguments.length; i++) {
                         view.setCursorMode(cmd.arguments[i]);
                     }
                     helper = $.trim(view.getCursorModeClass());
@@ -625,18 +636,18 @@
                 case 'h':
                 case 'help':
                     out = `Commands:<br>
-                        bbs <small>[contents of this site]</small><br>
-                        calc &lt;simple math&gt; <small>[simple math calculator]</small><br>
-                        len &lt;text&gt; <small>[length of text]</small><br>
-                        ucase &lt;text&gt; <small>[upper case text]</small><br>
-                        lcase &lt;text&gt; <small>[lower case text]</small><br>
-                        rss &lt;url&gt; <small>[list contents of an rss feed]</small><br>
-                        search &lt;phrase&gt; <small>[search the web]</small><br>
-                        web &lt;url&gt; <small>[go to url]</small><br>
-                        loadwb <small>[dive into nostalgia]</small><br>
-                        shirt <small>[express nostalgia]</small><br>
+                        bbs <small>[Contents of this site]</small><br>
+                        calc &lt;simple math&gt; <small>[Simple math calculator]</small><br>
+                        len &lt;text&gt; <small>[Length of text]</small><br>
+                        ucase &lt;text&gt; <small>[Upper case text]</small><br>
+                        lcase &lt;text&gt; <small>[Lower case text]</small><br>
+                        rss &lt;url&gt; <small>[List contents of an rss feed]</small><br>
+                        search &lt;phrase&gt; <small>[Search the web]</small><br>
+                        web &lt;url&gt; <small>[Go to url]</small><br>
+                        loadwb <small>[Dive into nostalgia. Options: simulator, emulator, watch]</small><br>
+                        shirt <small>[Express nostalgia. You get one random shirt]</small><br>
                         cursor &lt;mode&gt; <small>${config.cursor.help}</small><br>
-                        cls <small>[clear screen]</small><br>
+                        cls <small>[Clear screen]</small><br>
                         about, licences, help<br>
                         exit`;
                     break;
@@ -674,7 +685,7 @@
                     break;
                 case 'rss':
                     if (myRSS.getFeedYQL(cmd.arguments[0])) {
-                        out = `Trying to open '${cmd.arguments[0]}' `;
+                        out = `Attempting to open '${cmd.arguments[0]}' `;
                     } else {
                         out = 'Usage: rss &lt;url&gt;';
                     }
@@ -688,10 +699,20 @@
                     }
                     break;
                 case 'loadwb':
-                    this.openUrl("http://pnacl-amiga-emulator.appspot.com/");
+                    switch (cmd.arguments[0]) {
+                        case 'emulator':
+                            this.openUrl("http://pnacl-amiga-emulator.appspot.com/");
+                            break;
+                        case 'watch':
+                            this.openUrl("http://bulletin-board.de/watchfaces/portfolio/amiga-wb-1-2/");
+                            break;
+                        default:
+                            this.openUrl("http://www.taws.ch/WB.html");
+                            break;
+                    }
                     break;
                 case 'shirt':
-                    this.openUrl("http://lemon.spreadshirt.co.uk/de/shell-A8380690/customize/color/317");
+                    this.openUrl(config.shirts[Math.floor(Math.random() * config.shirts.length)]);
                     break;
                 default:
                     out = `Command '${cmd.command}' not found`;
