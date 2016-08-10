@@ -236,7 +236,7 @@
             myClipboard = Clipboard.create(
                 view.typeText.bind(view),
                 () => {
-                    return view.$prompt.text();
+                    return $.trim(view.$prompt.text());
                 }
             );
             view.$body.on('keyup', this.onKeyUp)
@@ -641,6 +641,8 @@
                         len &lt;text&gt; <small>[Length of text]</small><br>
                         ucase &lt;text&gt; <small>[Upper case text]</small><br>
                         lcase &lt;text&gt; <small>[Lower case text]</small><br>
+                        (de/en)code &lt;uri&gt; <small>[Decode or encode URI]</small><br>
+                        (de/en)codecomponent &lt;uri&gt; <small>[Decode or encode URI]</small><br>
                         rss &lt;url&gt; <small>[List contents of an rss feed]</small><br>
                         search &lt;phrase&gt; <small>[Search the web]</small><br>
                         web &lt;url&gt; <small>[Go to url]</small><br>
@@ -668,6 +670,22 @@
                 case 'lowercase':
                 case 'lcase':
                     out = cmd.arguments.join(' ').toLocaleLowerCase();
+                    break;
+                case 'encodeuri':
+                case 'encode':
+                    out = encodeURI(cmd.arguments.join(' '));
+                    break;
+                case 'encodeuricomponent':
+                case 'encodecomponent':
+                    out = encodeURIComponent(cmd.arguments.join(' '));
+                    break;
+                case 'decodeuri':
+                case 'decode':
+                    out = decodeURI(cmd.arguments.join(' '));
+                    break;
+                case 'decodeuricomponent':
+                case 'decodecomponent':
+                    out = decodeURIComponent(cmd.arguments.join(' '));
                     break;
                 case 'google':
                     this.openUrl(encodeURI(`https://www.google.com/search?q=${cmd.arguments.join(' ')}`));
