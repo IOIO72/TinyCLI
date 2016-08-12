@@ -619,7 +619,7 @@
                     break;
                 case 'exit':
                     view.$terminal.remove();
-                    window.history.back();
+                    setTimeout(() => {window.history.back(); }, 1500);
                     break;
                 case 'about':
                     out = `Made by Tamio Patrick Honma (<a href="https://about.me/honma" target="_blank">about.me</a>)<br>MIT License (MIT) Copyright (c) 2016 Tamio Honma<br>Use the command 'licences' to see all licences of this website.`;
