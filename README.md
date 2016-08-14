@@ -75,6 +75,10 @@ Be encouraged to ...
 
 Please use feature or bug branches for your pull / merge requests like `feature/(YOURFEATURE)` or `bug/(YOURBUGFIX)`.
 
+# Chat
+
+[Chat on gitter.im](https://gitter.im/bulletin-board-de/Lobby)
+
 # License
 
 MIT licensed

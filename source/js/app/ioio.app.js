@@ -637,6 +637,7 @@
                 case 'help':
                     out = `Commands:<br>
                         bbs <small>[Contents of this site]</small><br>
+                        chat <small>[Chat]</small><br>
                         calc &lt;simple math&gt; <small>[Simple math calculator]</small><br>
                         len &lt;text&gt; <small>[Length of text]</small><br>
                         ucase &lt;text&gt; <small>[Upper case text]</small><br>
@@ -686,6 +687,9 @@
                 case 'decodeuricomponent':
                 case 'decodecomponent':
                     out = decodeURIComponent(cmd.arguments.join(' '));
+                    break;
+                case 'chat':
+                    this.openUrl('https://gitter.im/bulletin-board-de/Lobby');
                     break;
                 case 'google':
                     this.openUrl(encodeURI(`https://www.google.com/search?q=${cmd.arguments.join(' ')}`));
