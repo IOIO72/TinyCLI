@@ -5,6 +5,12 @@
             "articles": [
                 {
                     "name": "start.md"
+                },
+                {
+                    "name": "tinycli.md"
+                },
+                {
+                    "name": "cursor.md"
                 }
             ]
         },
