@@ -1,21 +1,21 @@
 {
-  "name": "ioioPen",
-  "description": "Kickstart for projects based on Gulp, Bower, Jade, PostCSS and jQuery",
+  "name": "TinyCLI",
+  "description": "Web-based CLI",
   "main": "source/js/app/ioio.app.js",
   "authors": [
     "Tamio Patrick Honma"
   ],
   "license": "MIT",
   "keywords": [
-    "kickstart",
-    "boilerplate",
+    "cli",
+    "babel",
     "gulp",
     "jade",
     "sass",
     "jQuery"
   ],
   "moduleType": [],
-  "homepage": "http://www.honma.de/",
+  "homepage": "http://bulletin-board.de/",
   "private": true,
   "ignore": [
     "**/.*",
