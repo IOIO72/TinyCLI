@@ -48,6 +48,7 @@
 html, body {
     margin: 0;
     padding: 0;
+    overflow: hidden;
 }
 
 body {
@@ -161,5 +162,29 @@ h1 {
                 }
             }
         }
+    }
+}
+
+.ribbon {
+    position: absolute;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    top: 10rem;
+    right: -2rem;
+    transform-origin: right top;
+    transform: rotate(45deg);
+    background-color: black;
+    box-shadow: 0 0 10px green;
+    font-family: monospace;
+    text-align: center;
+    a {
+        display: block;
+        margin: 1px 0;
+        padding: .5rem 4rem;
+        border: 1px solid green;
+        text-shadow: 0 0 5px white;
+        text-decoration: none;
+        color: lime;
     }
 }
