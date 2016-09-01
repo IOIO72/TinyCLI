@@ -1,7 +1,7 @@
 # TinyCLI / Bulletin-Board Edition
 
-This website welcomes the user by a terminal interface - as you
-experienced all ready.
+This website welcomes the user by a terminal interface - as you've
+already experienced.
 
 **Why?**
 
