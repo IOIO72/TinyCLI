@@ -70,7 +70,7 @@ gulp.task('templates', function () {
     gulp.src('./source/jade/*.jade')
         .pipe(cleanDest('./build'))
         .pipe(jade({pretty: true}))
-        .pipe(html5lint())
+        //.pipe(html5lint())
         .pipe(gulp.dest('./build'))
     ;
 });
