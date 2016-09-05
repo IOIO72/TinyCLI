@@ -45,6 +45,15 @@
     @mixin blink black;
 }
 
+@keyframes ribbonblink {
+    0% {
+        text-shadow: 0 0 5px red;
+    }
+    50% {
+        text-shadow: 0 0 12px lime;
+    }
+}
+
 html, body {
     margin: 0;
     padding: 0;
@@ -186,5 +195,11 @@ h1 {
         text-shadow: 0 0 5px white;
         text-decoration: none;
         color: lime;
+        animation-name: ribbonblink;
+        animation-timing-function: ease-in-out;
+        animation-direction: alternate;
+        animation-fill-mode: none;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
     }
 }
