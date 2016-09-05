@@ -652,6 +652,7 @@
                         cursor &lt;mode&gt; <small>${config.cursor.help}</small><br>
                         cls <small>[Clear screen]</small><br>
                         about, licences, help<br>
+                        fork [Fork me on GitHub]<br>
                         exit`;
                     break;
                 case 'eval':
@@ -688,6 +689,13 @@
                 case 'decodecomponent':
                     out = decodeURIComponent(cmd.arguments.join(' '));
                     break;
+                case 'fork':
+                case 'github':
+                    this.openUrl('https://github.com/IOIO72/TinyCLI');
+                    break;
+                case 'gitlab':
+                    this.openUrl('https://gitlab.com/IOIO72/TinyCLI');
+                    break;
                 case 'chat':
                     this.openUrl('https://gitter.im/bulletin-board-de/Lobby');
                     break;
@@ -712,6 +720,7 @@
                         out = 'Usage: rss &lt;url&gt;';
                     }
                     break;
+                case 'ls':
                 case 'bbs':
                     if (cmd.arguments.length === 0) {
                         out = myBBS.listBoards();
