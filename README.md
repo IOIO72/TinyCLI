@@ -23,7 +23,7 @@ TinyCLI is a web-based command line interface.
 
 # Setup
 
-1. Check the build status: [![Build Status](https://travis-ci.org/IOIO72/TinyCLI.svg)](https://travis-ci.org/IOIO72/TinyCLI)
+1. Check the build status: [![Build Status](https://travis-ci.org/IOIO72/TinyCLI.svg)](https://travis-ci.org/IOIO72/TinyCLI) [![Dependencies](https://david-dm.org/IOIO72/TinyCLI.svg)](https://david-dm.org/IOIO72/TinyCLI)
 1. If you didn't before, install [Node.js](https://nodejs.org/)
 1. If you didn't before, install [Gulp.js](http://gulpjs.com/) `npm install --global gulp`
 1. If you didn't before, install [Bower](http://bower.io/) `npm install -g bower`
