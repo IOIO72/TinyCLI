@@ -652,7 +652,7 @@
                         cursor &lt;mode&gt; <small>${config.cursor.help}</small><br>
                         cls <small>[Clear screen]</small><br>
                         about, licences, help<br>
-                        fork [Fork me on GitHub]<br>
+                        fork <small>[Fork me on GitHub]</small><br>
                         exit`;
                     break;
                 case 'eval':
