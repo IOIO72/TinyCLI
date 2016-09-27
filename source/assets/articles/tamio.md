@@ -16,14 +16,20 @@
 * [Google+](https://plus.google.com/+TamioHonma)
 * [twitter](https://twitter.com/ioio72)
 * [tumblr](http://ioio72.tumblr.com/)
+* [Pinterest](https://de.pinterest.com/tamiohonma/)
 
 ## Social Media
 
 * [Diigo](https://www.diigo.com/profile/ioio72)
 * [flickr](https://www.flickr.com/people/honma/)
+* [Instagram](https://www.instagram.com/tph_ioio/)
 * [YouTube](https://www.youtube.com/user/tamiohonma)
 * [vimeo](https://vimeo.com/honma)
+* [Soundcloud](https://soundcloud.com/ioio)
+* [Medium](https://medium.com/@IOIO)
+* [Wikipedia](https://de.wikipedia.org/wiki/Benutzer:Tamio)
 * [Internet Archive](http://archive.org/search.php?query=Tamio%20Honma)
+* [IMDb](http://www.imdb.com/user/ur47934714/)
 
 ## Development
 

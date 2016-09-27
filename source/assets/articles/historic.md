@@ -1,5 +1,12 @@
 # Historic
 
+_The internet never forgets? Let's see..._
+_(Research in progress)_
+
+## Newsgroup
+
+* [Some Newsgroup entries](https://groups.google.com/forum/#!search/Tamio$20Honma)
+
 ## Some of Tamio's historic websites
 
 * 1994: [My very first homepage](https://web.archive.org/web/19970427142054/http://www-public.rz.uni-duesseldorf.de/~honma/homepage.html)
