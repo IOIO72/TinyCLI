@@ -1,6 +1,8 @@
 // Author: Tamio Patrick Honma <tamio@honma.de>
 // License: MIT
 
+/* global $ */
+
 (function app() {
 
     class Clipboard {
