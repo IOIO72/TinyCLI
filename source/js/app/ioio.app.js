@@ -223,6 +223,9 @@
             "http://lemon.spreadshirt.co.uk/de/g064-A8324936/customize/color/2",
             "http://lemon.spreadshirt.co.uk/de/64k-ram-system-A8405480/customize/color/4",
             "http://lemon.spreadshirt.co.uk/de/sys-4096-A8330344/customize/color/4"
+        ],
+        fun: [
+            "http://www.commitstrip.com/en/2016/12/22/terminal-forever/"
         ]
     };
 
@@ -651,6 +654,7 @@
                         web &lt;url&gt; <small>[Go to url]</small><br>
                         loadwb <small>[Dive into nostalgia. Options: simulator, emulator, watch]</small><br>
                         shirt <small>[Express nostalgia. You get one random shirt]</small><br>
+                        fun <small>[Get some terminal jokes]</small><br>
                         cursor &lt;mode&gt; <small>${config.cursor.help}</small><br>
                         cls <small>[Clear screen]</small><br>
                         about, licences, help<br>
@@ -745,7 +749,10 @@
                     }
                     break;
                 case 'shirt':
-                    this.openUrl(config.shirts[Math.floor(Math.random() * config.shirts.length)]);
+                    this.openRndUrl(config.shirts);
+                    break;
+                case 'fun':
+                    this.openRndUrl(config.fun);
                     break;
                 default:
                     out = `Command '${cmd.command}' not found`;
@@ -767,6 +774,15 @@
             return {
                 'command': arrPrompt.shift().toLowerCase(),
                 'arguments': arrPrompt.filter((arg) => {return arg.length > 0;})
+            }
+        },
+
+        openRndUrl(arr) {
+            if (typeof arr === 'undefined' || arr === 'undefined' || arr.length === 0) {
+                return false;
+            } else {
+                this.openUrl(arr[Math.floor(Math.random() * arr.length)]);
+                return true;
             }
         },
 
