@@ -225,7 +225,8 @@
             "http://lemon.spreadshirt.co.uk/de/sys-4096-A8330344/customize/color/4"
         ],
         fun: [
-            "http://www.commitstrip.com/en/2016/12/22/terminal-forever/"
+            "http://www.commitstrip.com/en/2016/12/22/terminal-forever/",
+            "https://play.google.com/store/apps/details?id=ohi.andre.consolelauncher"
         ]
     };
 
